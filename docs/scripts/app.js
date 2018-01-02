@@ -27,7 +27,7 @@
    ****************************************************************************/
 
   document.getElementById("heading").addEventListener('click', function() {
-  	console.log("edit heading"); // ---------- NEED TO WRITE HEADING EDIT CODE AND DIALOG ------------
+  	console.log("edit heading");
 	if(app.path.length>0) { // no effect at top level
 		app.toggleDialog("editDialog", true); // show section neame in edit dialog
 		document.getElementById('text').value=app.listName;
@@ -175,18 +175,7 @@
     		}
 	  }
   };
-  /*
-  app.toggleAddDialog = function(visible) {
-	  console.log("show add dialog: "+visible);
-	  console.log(app.addDialog.classList);
-    if (visible) {
-      	app.addDialog.classList.add('dialog-container--visible');
-    } else {
-      app.addDialog.classList.remove('dialog-container--visible');
-    }
-	console.log(app.addDialog.classList);
-  };
-*/
+
   // Save jottings to localStorage FOR NOW - LATER USE HOODIE
   app.saveJottings = function() {
     var jottings = JSON.stringify(app.jottings);
@@ -233,13 +222,6 @@
   
   // Open jotting/section
   app.openItem = function(i) {
-	  /*
-	  var text = item.textContent;
-	  console.log("open item "+event.target+": "+text);
-	  var i=0;
-	  while(app.jottingList[i].text!=text) {i++};
-	  console.log("item "+i+": "+app.jottingList[i]);
-	  */
 	  app.jotting = app.jottingList[i];
 	  if(app.jotting.content!=null) { // list
 		  app.path.push(i); // path lists hierarchy to current section
@@ -248,11 +230,9 @@
 		  app.populateList();
 	  }
 	  else { // just a jotting - open for editing
-	  	// app.editDialog.textContent = jotting.content;
 		app.toggleDialog("editDialog", true);
 		document.getElementById("text").value = app.jotting.text;
 	  }
-  	// app.path.push(n); // path lists hierarchy to current section
   }
   
   app.populateList = function() {
@@ -273,11 +253,11 @@
   	}
 	if(app.path.length<1) {
 	  document.getElementById("butBack").style.display="none";
-	  document.getElementById("butMenu").style.display="none";
+	  // document.getElementById("butMenu").style.display="none";
   	}
 	else {
 	  document.getElementById("butBack").style.display="block";
-	  document.getElementById("butMenu").style.display="block";
+	  // document.getElementById("butMenu").style.display="block";
 	}
   }
 

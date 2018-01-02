@@ -101,9 +101,10 @@ body {
     background: url(docs/images/backButton24px.svg) center center no-repeat; }
   .header #butAdd {
     background: url(docs/images/addButton24px.svg) center center no-repeat; }
-	 .header #butMenu {
-    background: url(docs/images/menuButton24px.svg) center center no-repeat; }
-
+/*
+.header #butMenu {
+background: url(docs/images/menuButton24px.svg) center center no-repeat; }
+*/
 .header__title {
   font-weight: 400;
   font-size: 20px;
