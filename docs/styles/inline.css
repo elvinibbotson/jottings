@@ -98,11 +98,11 @@ body {
     outline: none;
     cursor: pointer; }
   .header #butBack {
-    background: url(../images/backButton24px.svg) center center no-repeat; }
+    background: url(docs/images/backButton24px.svg) center center no-repeat; }
   .header #butAdd {
-    background: url(../images/addButton24px.svg) center center no-repeat; }
+    background: url(docs/images/addButton24px.svg) center center no-repeat; }
 	 .header #butMenu {
-    background: url(../images/menuButton24px.svg) center center no-repeat; }
+    background: url(docs/images/menuButton24px.svg) center center no-repeat; }
 
 .header__title {
   font-weight: 400;
@@ -230,39 +230,6 @@ body {
 .dialog-container--visible {
   opacity: 1;
   pointer-events: auto; }
-  
-/*
-.add-dialog-container {
-  background: rgba(0, 0, 0, 0.57);
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  pointer-events: none;
-  will-change: opacity;
-  -webkit-transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
-  transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1); }
-
-.edit-dialog-container {
-  background: rgba(0, 0, 0, 0.57);
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  pointer-events: none;
-  will-change: opacity;
-  -webkit-transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
-  transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1); }
-
-
-.dialog-container--visible {
-  opacity: 1;
-  pointer-events: auto; }
-*/
 
 .dialog {
   background: #FFF;
