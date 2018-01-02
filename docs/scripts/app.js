@@ -59,6 +59,7 @@
 	if(app.path.length<1) type.options.selectedIndex=1;
 	else type.options.selectedIndex=0;
     app.toggleDialog('addDialog',true);
+	document.getElementById('text').value="";
   });
 
   document.getElementById('butAddNewJotting').addEventListener('click', function() {
@@ -94,6 +95,20 @@
     app.toggleDialog('addDialog', false);
   });
   
+  document.getElementById('butDelete').addEventListener('click', function() {
+  	// initiate delete jotting/list
+	  console.log("delete jotting "+app.jotting.text);
+	// app.jotting = app.jottingList[i];
+		if(app.jotting.content!=null) {
+			if(app.jotting.content.length>0) { // cannot delete lists unless empty
+				app.toggleDialog("alertDialog", true);
+				return;
+			}
+		}
+		app.toggleDialog("deleteDialog", true);
+		document.getElementById('deleteText').innerHTML = app.jotting.text;
+  });
+  
   document.getElementById('butSave').addEventListener('click', function() {
   	// Save edited jotting
 	  var text = document.getElementById("text").value;
@@ -118,8 +133,8 @@
     app.toggleDialog('editDialog', false);
   });
   
-  document.getElementById('butDelete').addEventListener('click', function() {
-  	// delete jotting/list
+  document.getElementById('butDeleteConfirm').addEventListener('click', function() {
+  	// confirm delete jotting/list
 	console.log("delete jotting "+app.jotting.text);
 	var i=app.jottingList.indexOf(app.jotting);
 	console.log("item "+i);
