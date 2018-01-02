@@ -261,6 +261,10 @@ body {
 .dialog-buttons {
   padding: 8px !important;
   float: right; }
+  
+.deleteButton {
+	background-color: red;
+}
 
 .mdl-button {
   background: transparent;
