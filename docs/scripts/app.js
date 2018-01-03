@@ -104,6 +104,7 @@
 		if(app.jotting.content!=null) {
 			if(app.jotting.content.length>0) { // cannot delete lists unless empty
 				document.getElementById('butDelete').disabled=true;
+				console.log("delete disabled");
 				// app.toggleDialog("alertDialog", true);
 				// return;
 			}
