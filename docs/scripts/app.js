@@ -102,9 +102,10 @@
 	  document.getElementById('butDelete').disabled=false;
 	// app.jotting = app.jottingList[i];
 		if(app.jotting.content!=null) {
+			console.log(app.jotting.content.length+" items");
 			if(app.jotting.content.length>0) { // cannot delete lists unless empty
 				document.getElementById('butDelete').disabled=true;
-				console.log("delete disabled");
+				console.log("delete button disabled");
 				// app.toggleDialog("alertDialog", true);
 				// return;
 			}
