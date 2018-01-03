@@ -58,6 +58,7 @@
 	var type=document.getElementById('type');
 	if(app.path.length<1) type.options.selectedIndex=1;
 	else type.options.selectedIndex=0;
+	console.log("show add jotting diaog with blank text field");
     app.toggleDialog('addDialog',true);
 	document.getElementById('text').value="";
   });
@@ -98,15 +99,18 @@
   document.getElementById('butDelete').addEventListener('click', function() {
   	// initiate delete jotting/list
 	  console.log("delete jotting "+app.jotting.text);
+	  document.getElementById('butDelete').disabled=false;
 	// app.jotting = app.jottingList[i];
 		if(app.jotting.content!=null) {
 			if(app.jotting.content.length>0) { // cannot delete lists unless empty
-				app.toggleDialog("alertDialog", true);
-				return;
+				document.getElementById('butDelete').disabled=true;
+				// app.toggleDialog("alertDialog", true);
+				// return;
 			}
 		}
 		app.toggleDialog("deleteDialog", true);
 		document.getElementById('deleteText').innerHTML = app.jotting.text;
+		app.toggleDialog("editDialog", false);
   });
   
   document.getElementById('butSave').addEventListener('click', function() {
