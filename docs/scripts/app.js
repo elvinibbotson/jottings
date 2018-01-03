@@ -43,7 +43,7 @@
 	if(app.path.length>0) {
 	 	var i=0;
 		while(i<app.path.length) {
-			list=list[app.path[i++]];
+			list=list[app.path[i++]].content;
 			console.log("list: "+list);
 		}
 		app.listName=list.text;
