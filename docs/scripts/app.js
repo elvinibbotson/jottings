@@ -60,7 +60,7 @@
 	else type.options.selectedIndex=0;
 	console.log("show add jotting diaog with blank text field");
     app.toggleDialog('addDialog',true);
-	document.getElementById('text').value="";
+	// document.getElementById('text').value="";
   });
 
   document.getElementById('butAddNewJotting').addEventListener('click', function() {
@@ -152,12 +152,12 @@
     // Close the delete dialog
     app.toggleDialog('deleteDialog', false);
   });
-  
+  /* not needed
    document.getElementById('butCancelAlert').addEventListener('click', function() {
     // Close the alert dialog
     app.toggleDialog('alertDialog', false);
   });
- 
+ */
    /*****************************************************************************
    * Methods to update/refresh the UI
    ****************************************************************************/
@@ -168,6 +168,7 @@
 	  if(d=='addDialog') { // toggle ADD dialog
 	  	 if (visible) {
       		app.addDialog.classList.add('dialog-container--visible');
+			document.getElementById('newText').value="";
     		} else {
       		app.addDialog.classList.remove('dialog-container--visible');
     		}
