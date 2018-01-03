@@ -263,7 +263,7 @@ body {
   float: right; }
   
 .deleteButton {
-	background-color: red;
+	color: red;
 }
 
 .mdl-button {
