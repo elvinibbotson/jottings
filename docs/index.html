@@ -51,7 +51,7 @@
   <div id="editDialog" class="dialog-container">
   	<div class="dialog">
 		<div class="dialog-title">Edit</div>
-		<div  class="dialog-body"><input type="text" id="text"/></div>
+		<div  class="dialog-body"><input type="text" id="text" size="30"/></div>
 		<div class="dialog-buttons">
 			<button id="butDelete" class="deleteButton">Delete</button>
        	 	<button id="butSave" class="button">Save</button>
@@ -65,29 +65,18 @@
 		<div class="dialog-title">Delete</div>
 		<div  id="deleteText" class="dialog-body">text</div>
 		<div class="dialog-buttons">
-       	 	<button id="butDeleteConfirm" class="button">Delete</button>
+       	 	<button id="butDeleteConfirm" class="deleteButton">Delete</button>
        		<button id="butCancelDelete" class="button">Cancel</button>
 		 </div>
       </div>
   </div>
   
- <div id="alertDialog" class="dialog-container">
-  	<div class="dialog">
-		<div class="dialog-title">Cannot delete</div>
-		<div  id="deleteText" class="dialog-body">Only empty lists can be deleted.</div>
-		<div class="dialog-buttons">
-       		<button id="butCancelAlert" class="button">Cancel</button>
-		 </div>
-      </div>
-  </div>
-
   <div class="loader">
     <svg viewBox="0 0 32 32" width="32" height="32">
       <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
     </svg>
   </div>
 
-  <!-- Uncomment the line below when ready to test with fake data -->
   <script src="scripts/app.js" async></script>
 
 </body>

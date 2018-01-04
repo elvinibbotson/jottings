@@ -264,6 +264,7 @@ body {
   
 .deleteButton {
 	color: red;
+	margin-right: 80px;
 }
 
 .mdl-button {
