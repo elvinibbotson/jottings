@@ -3,7 +3,9 @@ var cacheName = 'Jottings-1';
 var filesToCache = [
   '/index.html',
   '/scripts/app.js',
-  '/styles/inline.css'
+  '/styles/inline.css',
+  '/images/addButton24px.svg',
+  '/images/backButton24px.svg'
 ];
 
 self.addEventListener('install', function(e) {
