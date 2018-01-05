@@ -44,8 +44,17 @@ body {
   
   select {
   	font-size: 1em;
+	font-weight: bold;
 	border-width: 0;
  }
+ 
+ input {
+	font-size: 1em;
+}
+
+button {
+	font-size: 1em;
+}
  
 .header {
   width: 100%;
@@ -218,7 +227,7 @@ body {
 }
 
 .dialog-container {
-  background: rgba(0, 0, 0, 0.57);
+  background: rgba(0, 0, 0, 0.5);
   position: fixed;
   left: 0;
   top: 0;
@@ -254,19 +263,20 @@ body {
 
 .dialog-title {
   padding-top: 20px;
-  font-size: 1.25em; }
-
+  font-size: 1em;
+  font-weight: bold;
+  color: blue;
+}
 .dialog-body {
   padding-top: 20px;
   padding-bottom: 24px; }
   .dialog-body select {
     width: 100%;
-    font-size: 2em; }
-
+}
 .dialog-buttons {
   padding: 8px !important;
-  float: right; }
-  
+  float: right;
+}
 .deleteButton {
 	color: red;
 	margin-right: 50px;
