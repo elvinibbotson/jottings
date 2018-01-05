@@ -84,11 +84,13 @@ body {
   transition: -webkit-transform 0.233s cubic-bezier(0, 0, 0.21, 1) 0.1s;
   transition: transform 0.233s cubic-bezier(0, 0, 0.21, 1) 0.1s;
   transition: transform 0.233s cubic-bezier(0, 0, 0.21, 1) 0.1s, -webkit-transform 0.233s cubic-bezier(0, 0, 0.21, 1) 0.1s;
-  z-index: 1000; }
+  z-index: 1000;
+  }
   .header .headerButton {
     width: 24px;
     height: 24px;
-    margin-right: 24px;
+	margin-left: 30px;
+    margin-right: 30px;
     text-indent: -30000px;
     overflow: hidden;
     opacity: 1;
@@ -96,12 +98,14 @@ body {
     transition: opacity 0.333s cubic-bezier(0, 0, 0.21, 1);
     border: none;
     outline: none;
-    cursor: pointer; }
+    cursor: pointer;
+ }
   .header #butBack {
-    background: url(../images/backButton24px.svg) center center no-repeat; }
+    background: url(../images/backButton24px.svg) center center no-repeat;
+ }
   .header #butAdd {
-    background: url(../images/addButton24px.svg) center center no-repeat; }
-
+    background: url(../images/addButton24px.svg) center center no-repeat;
+ }
 .header__title {
   font-weight: 400;
   font-size: 20px;
@@ -109,7 +113,8 @@ body {
   -webkit-box-flex: 1;
   -webkit-flex: 1;
       -ms-flex: 1;
-          flex: 1; }
+          flex: 1;
+}
 
 .loader {
   left: 50%;
