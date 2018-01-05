@@ -116,7 +116,7 @@
   
   document.getElementById('butDeleteConfirm').addEventListener('click', function() {
   	// confirm delete jotting/list
-	console.log("delete jotting "+app.jotting.text);
+	console.log("delete "+app.jotting.text);
 	// var list=app.jottings;
 	// var i=0;  
 	if(app.jottingList.length<1) { // delete empty list (below top level) so...
@@ -124,13 +124,19 @@
 		var i=0;
 		console.log("path length: "+app.path.length);
 		app.path.pop(); // deleting this (empty) list
-		while(i<app.path.length) {
-			console.log("path["+i+"]: "+app.path[i]);
-			list=list[app.path[i++]];
-			console.log("list: "+list.text+" - first item: "+list.content[0].text);
+		if(app.path.length>0) {
+			while(i<app.path.length) {
+				console.log("path["+i+"]: "+app.path[i]);
+				list=list[app.path[i++]];
+				console.log("list: "+list.text+" - first item: "+list.content[0].text);
+			}
+			app.jottingList=list.content; // ...jottingList is parent list
+			app.listName=list.text;
 		}
-		app.jottingList=list.content; // ...jottingList is parent list
-		app.listName=list.text;
+		else {
+			app.jottingList=app.jottings;
+			app.listName="Jottings";
+		}
 		// test code
 		console.log("list: "+app.jottingList);
 		i=0;
@@ -145,25 +151,10 @@
 		i=app.jottingList.indexOf(app.jotting);
 		console.log("item "+i);
 		app.jottingList.splice(i,1);
-		/*
-		if(app.path.length>0) {
-			i=0;
-			while(i<app.path.length) {
-				console.log("path["+i+"]: "+app.path[i]);
-				list=list[app.path[i++]];
-				console.log("list: "+list.text+"...");
-				var n=0;
-				while(n<list.content.length) {console.log(list.content[n++].text+";");};
-			}
-			app.listName=list.text;
-			list=list.content;
-	 	}
-		else app.listName="Jottings";
-		*/
 		console.log("list name: "+app.listName);
-		// app.jottingList=list;
-		app.populateList();
+		// app.populateList();
 	}
+	app.populateList();
 	app.saveJottings();
 	app.toggleDialog('deleteDialog', false);
   });
