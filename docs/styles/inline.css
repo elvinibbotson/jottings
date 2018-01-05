@@ -117,7 +117,7 @@ button {
  }
 .header__title {
   font-weight: 400;
-  font-size: 20px;
+  font-size: 1.5em;
   margin: 0;
   -webkit-box-flex: 1;
   -webkit-flex: 1;
@@ -217,7 +217,8 @@ button {
 	padding: 1em;
 	width: 100%;
 	background-color: #eef;
-	text-alighn: left;
+	text-align: left;
+	font-size: 1.2em;
 	display: block;
 }
 

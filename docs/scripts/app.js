@@ -144,6 +144,8 @@
 		console.log("item "+i);
 		app.jottingList.splice(i,1);
 		if(app.path.length>0) {
+			app.path.pop();
+			i=0;
 			while(i<app.path.length) {
 				list=list[app.path[i++]];
 				console.log("list: "+list);
