@@ -273,32 +273,33 @@
    *   SimpleDB (https://gist.github.com/inexorabletash/c8069c042b734519680c)
    ************************************************************************/
 
-  // TODO add startup code here
-  app.jottings = localStorage.jottings;
+  // startup code
+  
+  app.jottings = localStorage.jottings; // load any saved data...
   console.log("jottings:"+app.jottings);
   if (app.jottings) {
     app.jottings = JSON.parse(app.jottings);	  
   }
-  else {     // initial testing with fake data
+  else {     // ...or if none, use fake data
 	  console.log("data:"+fakeData);
 	  app.jottings = fakeData.jottings; // data.jottings
 	  console.log("jottings:"+app.jottings);
   }
-  // NEED TO DISPLAY FIRST PAGE WITH "Jottings" HEADING AND LIST OF FAKE DATA JOTTING NAMES
+  // display top level
   app.jottingList = app.jottings;
   app.listName="Jottings";
   app.populateList();
-    
+  // hide loading spinner
   if (app.isLoading) {
       app.spinner.setAttribute('hidden', true);
       app.container.removeAttribute('hidden');
       app.isLoading = false;
     }
- 
+  // implement service worker if browser is PWA friendly 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
              .register('./service-worker.js')
              .then(function() { console.log('Service Worker Registered'); });
   }
-
+  else console.log("not PWA freindly");
 })();

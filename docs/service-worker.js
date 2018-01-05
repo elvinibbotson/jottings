@@ -1,17 +1,3 @@
-// Copyright 2016 Google Inc.
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//      http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 var dataCacheName = 'JottingsData-v1';
 var cacheName = 'Jottings-1';
 var filesToCache = [
@@ -58,6 +44,15 @@ self.addEventListener('activate', function(e) {
   return self.clients.claim();
 });
 
+self.addEventListener('fetch', function(e) { // load shell files
+  console.log('[ServiceWorker] Fetch', e.request.url);
+  e.respondWith(
+    caches.match(e.request).then(function(response) {
+      return response || fetch(e.request);
+    })
+  );
+});
+/* old  code
 self.addEventListener('fetch', function(e) {
   console.log('[Service Worker] Fetch', e.request.url);
   var dataUrl = 'https://query.yahooapis.com/v1/public/yql';
@@ -68,7 +63,7 @@ self.addEventListener('fetch', function(e) {
      * network and then caches the response. This is called the "Cache then
      * network" strategy:
      * https://jakearchibald.com/2014/offline-cookbook/#cache-then-network
-     */
+     
     e.respondWith(
       caches.open(dataCacheName).then(function(cache) {
         return fetch(e.request).then(function(response){
@@ -82,7 +77,7 @@ self.addEventListener('fetch', function(e) {
      * The app is asking for app shell files. In this scenario the app uses the
      * "Cache, falling back to the network" offline strategy:
      * https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network
-     */
+     
     e.respondWith(
       caches.match(e.request).then(function(response) {
         return response || fetch(e.request);
@@ -90,3 +85,4 @@ self.addEventListener('fetch', function(e) {
     );
   }
 });
+*/
