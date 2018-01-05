@@ -1,13 +1,6 @@
 var dataCacheName = 'JottingsData-v1';
 var cacheName = 'Jottings-1';
-var filesToCache = [
-  '/',
-  '/index.html',
-  '/scripts/app.js',
-  '/styles/inline.css',
-  '/images/addButton24px.svg',
-  '/images/backButton24px.svg'
-];
+var filesToCache = [];
 
 self.addEventListener('install', function(e) {
   console.log('[ServiceWorker] Install');
