@@ -37,8 +37,8 @@
     <div class="dialog">
       <div class="dialog-title">New <select id='type'>
 	  	<option value="jotting">jotting</option>
-		<option value="list" selected>section</option>
-		<option value="secret">secrets</option>
+		<option value="list" selected>list</option>
+		<option value="secure">secure list</option>
 	</select></div>
       <div class="dialog-body"> <input type="text" id="newText"/></div>
       <div class="dialog-buttons">
@@ -67,6 +67,29 @@
 		<div class="dialog-buttons">
        	 	<button id="butDeleteConfirm" class="deleteButton">Delete</button>
        		<button id="butCancelDelete" class="button">Cancel</button>
+		 </div>
+      </div>
+  </div>
+  
+   <div id="keyDialog" class="dialog-container">
+  	<div class="dialog">
+		<div class="dialog-title">Key</div>
+		<div  class="dialog-body"><input type="text" id="keyText" size="8"/></div>
+		<div class="dialog-buttons">
+       	 	<button id="butUnlock" class="button">Unlock</button>
+       		<button id="butCancelUnlock" class="button">Cancel</button>
+		 </div>
+      </div>
+  </div>
+  
+   <div id="newKeyDialog" class="dialog-container">
+  	<div class="dialog">
+		<div class="dialog-title">Security</div>
+		<div  class="dialog-body">new key: <input type="text" id="newKeyText" size="8"/>
+		confirm: <input type="text" id="confirmKeyText" size="8"/></div>
+		<div class="dialog-buttons">
+       	 	<button id="butSaveKey" class="button">Save</button>
+       		<button id="butCancelKey" class="button">Cancel</button>
 		 </div>
       </div>
   </div>
