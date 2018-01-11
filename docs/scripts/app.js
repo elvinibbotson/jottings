@@ -87,13 +87,19 @@
 	var type=document.getElementById('type').options.selectedIndex;
 	console.log("selected type: "+type);
 	if(type>0) jotting.content=[];
-	if((type>1) || (app.secure==true)) { // encrypt secure jottings/lists
+	if((type<2) && (app.secure==false)) {
+		jotting.secure=0;
+		jotting.text=jottingName;
+	}
+	else if(app.keyCode!=null) {
+		app.secure=true;
 		jotting.secure=1; // secure lists have 'secure' property
 		jotting.text=app.cryptify(jottingName,app.keyCode);
 	}
-	else { // unless secure, save plain text
-		jotting.secure=0;
-		jotting.text=jottingName;
+	else { // not yet unlocked
+		if(app.keyCode==null) app.toggleDialog('newKeyDialog',true); // set key for first time
+		else app.toggleDialog("keyDialog",true); // unlock by entering key
+		return;
 	}
 	app.jottingList.push(jotting);
 	console.log("save new jotting "+jotting.text+"; secure: "+jotting.secure);
