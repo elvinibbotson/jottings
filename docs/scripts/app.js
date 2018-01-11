@@ -99,6 +99,7 @@
 	else { // not yet unlocked
 		if(app.keyCode==null) app.toggleDialog('newKeyDialog',true); // set key for first time
 		else app.toggleDialog("keyDialog",true); // unlock by entering key
+		app.toggleDialog('addDialog',false);
 		return;
 	}
 	app.jottingList.push(jotting);
