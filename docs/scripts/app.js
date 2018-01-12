@@ -307,36 +307,14 @@
 		if(app.jotting.secure==1) app.secure=true;
 		else app.secure=false;
 		console.log("secure is "+app.secure);
-		/*
-		if(app.secure) { // decrypt secure data
-			app.jottingList=[];
-			for (var i=0;i<app.jotting.content.length;i++) {
-				app.jottingList[i]=app.cryptify(app.jotting.content[i],app.keyCode);
-			}
-		}
-		else */
 		app.jottingList = app.jotting.content;
 		app.listName=t;
-		// app.listName=app.jotting.text;
 		app.populateList();
 	}
 	else { // trying to open a secure list before unlocking - show key dialog
 		if(app.keyCode==null) app.toggleDialog('newKeyDialog',true); // set key for first time
 		else app.toggleDialog("keyDialog",true); // unlock by entering key
 	}
-	/*
-		  app.path.push(i); // path lists hierarchy to current section
-		  app.jottingList = app.jotting.content;
-		  app.listName=app.jotting.text;
-		  app.populateList();
-	}
-	else { // just a jotting - open for editing
-		document.getElementById('butDelete').disabled=false;
-		document.getElementById('butDelete').style.color='red';
-		app.toggleDialog("editDialog", true);
-		document.getElementById("text").value = app.jotting.text;
-	}
-	*/
   }
   
   app.populateList = function() {
@@ -409,9 +387,9 @@
 
   // startup code
   app.keyCode = localStorage.keyCode; // load any saved key
-  console.log("saved key is "+app.keyCode);
+  // console.log("saved key is "+app.keyCode);
   if(app.keyCode!=null) app.keyCode = app.cryptify(app.keyCode, 'jottings'); // saved key was encrypted
-  console.log("keyCode: "+app.keyCode);
+ // console.log("keyCode: "+app.keyCode);
   
   app.jottings = localStorage.jottings; // load any saved data...
   console.log("jottings:"+app.jottings);

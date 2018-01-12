@@ -1,11 +1,6 @@
-var dataCacheName = 'JottingsData-v2';
-var cacheName = 'Jottings-2';
+var dataCacheName = 'JottingsData-v3';
+var cacheName = 'Jottings-3';
 var filesToCache = [
-  '/index.html',
-  '/scripts/app.js',
-  '/styles/inline.css',
-  '/images/addButton24px.svg',
-  '/images/backButton24px.svg'
 ];
 
 self.addEventListener('install', function(e) {
