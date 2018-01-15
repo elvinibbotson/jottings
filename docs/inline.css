@@ -111,10 +111,10 @@ button {
     cursor: pointer;
  }
   .header #butBack {
-    background: url(../images/backButton24px.svg) center center no-repeat;
+    background: url(../backButton24px.svg) center center no-repeat;
  }
   .header #butAdd {
-    background: url(../images/addButton24px.svg) center center no-repeat;
+    background: url(../addButton24px.svg) center center no-repeat;
  }
 .header__title {
   font-weight: 400;

@@ -129,8 +129,8 @@
   	// Save edited jotting
 	  var text = document.getElementById("text").value;
 	  app.toggleDialog('editDialog',false);
-	  console.log("Save jotting");
-	  if(jotting.secure>0) app.jotting.text=app.cryptify(text,app.keyCode); // encrypt if secure jotting
+	  console.log("Save jotting: "+text);
+	  if(app.jotting.secure>0) app.jotting.text=app.cryptify(text,app.keyCode); // encrypt if secure jotting
 	  else app.jotting.text = text;
 	  if(app.jotting.content!=null) app.listName=text;
 	  app.saveJottings();
