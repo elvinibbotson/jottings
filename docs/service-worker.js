@@ -2,7 +2,7 @@ var dataCacheName = 'JottingsData-v7';
 var cacheName = 'Jottings-7';
 var filesToCache = [
 	'/index.html',
-	'/app.js'.
+	'/app.js',
 	'/inline.css',
 	'/icons/fileButton24px.svg',
 	'/icons/addButton24px.svg',
