@@ -111,13 +111,13 @@ button {
     cursor: pointer;
  }
   .header #butFile {
-    background: url(../fileButton24px.svg) center center no-repeat;
+    background: url(fileButton24px.svg) center center no-repeat;
  }
   .header #butBack {
-    background: url(../backButton24px.svg) center center no-repeat;
+    background: url(backButton24px.svg) center center no-repeat;
  }
   .header #butAdd {
-    background: url(../addButton24px.svg) center center no-repeat;
+    background: url(addButton24px.svg) center center no-repeat;
  }
 .header__title {
   font-weight: 400;
