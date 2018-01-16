@@ -42,6 +42,16 @@
 	}
   });
   
+  document.getElementById('butFile').addEventListener('click', function() { // FILE BUTTON
+    // save jottings to a file which can be copied into  fakeData (below) for installing on a new device
+	var jottings = JSON.stringify(app.jottings);
+	var blob=new Blob([jottings],{type:'text/plain;charset=utf-8'});
+	console.log("blob ready");
+	// saveAs(blob,'jottings.txt');
+	saveAs(blob,'jottings.json'); // uses Filesaver.js function saveAs
+	console.log("jottings saved to file jottings.json");
+  });
+  
   document.getElementById('butBack').addEventListener('click', function() { // BACK BUTTON
     // back up a level (or close app if at top level)
     console.log("BACK");
@@ -317,6 +327,7 @@
 	}
   }
   
+  // POPULATE JOTTINGS LIST
   app.populateList = function() {
 	 console.log("populate list for path "+app.path+" with "+app.jottingList);
 	 document.getElementById("heading").innerHTML=app.listName;
@@ -325,9 +336,6 @@
   	 	var listItem = document.createElement('li');
 	  	listItem.classList.add('item');
 		listItem.addEventListener('click', app.openItem, false);
-		// listItem.addEventListener('pointerdown',app.touchStart,false);
-		// listItem.addEventListener('touchmove',app.drag,false);
-		// listItem.addEventListener('pointerup',app.touchEnd,false);
 		if(app.jottingList[i].secure>0) listItem.textContent = app.cryptify(app.jottingList[i].text,app.keyCode);
 		else listItem.textContent = app.jottingList[i].text;
 		if(app.jottingList[i].content!=null) {
@@ -337,14 +345,15 @@
   	}
 	if(app.path.length<1) {
 	  document.getElementById("butBack").style.display="none";
-	  // document.getElementById("butMenu").style.display="none";
+	  document.getElementById("butFile").style.display="block";
   	}
 	else {
+	  document.getElementById("butFile").style.display="none";
 	  document.getElementById("butBack").style.display="block";
-	  // document.getElementById("butMenu").style.display="block";
 	}
   }
   
+  // ENCRYPT/DECRYPT TEXT USING KEY
   app.cryptify = function(value, key) {
   	var i=0;
 	var result="";
@@ -361,7 +370,7 @@
 	return result;
   }
 
-  // fake data for initial testing
+  // FAKE DATA FOR INITIAL INSTALLATION
   var fakeData = {
 	  jottings: [
 	  {text: 'Shopping list', content: [{text: '(empty)'}]},
