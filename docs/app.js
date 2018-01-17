@@ -47,9 +47,11 @@
 	var jottings = JSON.stringify(app.jottings);
 	var blob=new Blob([jottings],{type:'text/plain;charset=utf-8'});
 	console.log("blob ready");
+	  alert("blob ready");
 	// saveAs(blob,'jottings.txt');
 	saveAs(blob,'jottings.json'); // uses Filesaver.js function saveAs
 	console.log("jottings saved to file jottings.json");
+	  alert("file saved");
   });
   
   document.getElementById('butBack').addEventListener('click', function() { // BACK BUTTON
@@ -373,14 +375,14 @@
   // FAKE DATA FOR INITIAL INSTALLATION
   var fakeData = {
 	  jottings: [
-	  {text: 'Shopping list', content: [{text: '(empty)'}]},
-	  {text: 'Petrol', content: [{text: '10/12/17 32@17345'}, {text: '2/12/17 34@17003'}]},
-	  {text: 'Music', content: [
-		  {text: 'New songs', content: [{text: '[(empty)'}]},
-		  {text: 'Re-rip...', content: [{text: '(empty)'}]},
-		  {text: 'Delete...', content: [{text: '(empty)'}]}
+	  {text: 'Shopping list', secure:0, content: [{text: '(empty)'}]},
+	  {text: 'Petrol', secure:0, content: [{text: '10/12/17 32@17345'}, {text: '2/12/17 34@17003'}]},
+	  {text: 'Music', secure:0, content: [
+		  {text: 'New songs', secure:0, content: [{text: '[(empty)'}]},
+		  {text: 'Re-rip...', secure:0, content: [{text: '(empty)'}]},
+		  {text: 'Delete...', secure:0, content: [{text: '(empty)'}]}
 		  ]},
-	  {text: 'a simple jotting'}
+	  {text: 'a simple jotting', secure:0 }
 	  ]}
 
   /************************************************************************
