@@ -1,5 +1,5 @@
-var dataCacheName = 'JottingsData-v11';
-var cacheName = 'Jottings-11';
+var dataCacheName = 'JottingsData-v1';
+var cacheName = 'Jottings-1';
 var filesToCache = [
 	'/index.html',
 	'/app.js',

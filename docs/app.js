@@ -43,11 +43,10 @@
   });
   
   document.getElementById('butFile').addEventListener('click', function() { // FILE BUTTON
-    // save jottings to a file which can be copied into  fakeData (below) for installing on a new device
+    // save jottings to a file which can be copied into defaultData (below) for installing on a new device
 	var jottings = JSON.stringify(app.jottings);
 	var blob=new Blob([jottings], {type:"data:application/json"});
-	console.log("saveBlob is "+navigator.msSaveBlob);
-	// return navigator.msSaveBlob(blob, 'jottings.json');
+	// return navigator.msSaveBlob(blob, 'jottings.json'); // only in Microsoft browsers
 	var a =document.createElement('a');
 	a.style.display='none';
     var url = window.URL.createObjectURL(blob);
@@ -55,40 +54,7 @@
     a.download='jottings.json';
     document.body.appendChild(a);
     a.click();
-	/*
-    setTimeout(function(){  // fixes firefox html removal bug
-    		window.URL.revokeObjectURL(url);
-        a.remove();
-    }, 500);
-	*/
-		  console.log("saved");
-
-	/*save to OneDrive
-	var odOptions = {
-  		clientId: "cc81cb02-a317-47b6-8472-1f1522e68563",
- 		action: "save",
-  		sourceInputElementId: "fileUploadControl",
- 		sourceUri: "jottings",
-  		fileName: "jottings.json",
-  		openInNewWindow: true,
-  		advanced: {},
-  		success: function(files) { alert("jottings.json saved to OneDrive");},
-  		progress: function(p) { console.log(".");},
-  		cancel: function() { alert("save cancelled!"); return;},
-  		error: function(e) { alert("save error: "+error);}
-	}
-	OneDrive.save(odOptions);
-	*/
-
-	/*
-	var blob=new Blob([jottings],{type:'text/plain;charset=utf-8'});
-	console.log("blob ready");
-	  alert("blob ready");
-	// saveAs(blob,'jottings.txt');
-	saveAs(blob,'jottings.json'); // uses Filesaver.js function saveAs
-	console.log("jottings saved to file jottings.json");
-	  alert("file saved");
-	*/
+	console.log("jottings file saved");
   });
   
   document.getElementById('butBack').addEventListener('click', function() { // BACK BUTTON
@@ -409,31 +375,17 @@
 	return result;
   }
 
-  // FAKE DATA FOR INITIAL INSTALLATION
-  var fakeData = {
-	  jottings: [
-	  {text: 'Shopping list', secure:0, content: [{text: '(empty)'}]},
-	  {text: 'Petrol', secure:0, content: [{text: '10/12/17 32@17345'}, {text: '2/12/17 34@17003'}]},
-	  {text: 'Music', secure:0, content: [
-		  {text: 'New songs', secure:0, content: [{text: '[(empty)'}]},
-		  {text: 'Re-rip...', secure:0, content: [{text: '(empty)'}]},
-		  {text: 'Delete...', secure:0, content: [{text: '(empty)'}]}
-		  ]},
-	  {text: 'a simple jotting', secure:0 }
-	  ]}
+  // MINIMAL DATA FOR INITIAL INSTALLATION
+  // to preserve jottings from one device to another...
+  // tap on Jottings header & save jottings.json
+  // email data to self and copy into defaultData
+  // refresh app.js at github.io
+  // saved jottings should appear by default on new device
+  var defaultData = {
+	  jottings: [{text: 'empty list', secure:0, content: []}]
+  }
 
-  /************************************************************************
-   *
-   * Code required to start the app
-   *
-   * NOTE: To simplify this codelab, we've used localStorage.
-   *   localStorage is a synchronous API and has serious performance
-   *   implications. It should not be used in production applications!
-   *   Instead, check out IDB (https://www.npmjs.com/package/idb) or
-   *   SimpleDB (https://gist.github.com/inexorabletash/c8069c042b734519680c)
-   ************************************************************************/
-
-  // startup code
+  // START-UP CODE
   app.keyCode = localStorage.keyCode; // load any saved key
   // console.log("saved key is "+app.keyCode);
   if(app.keyCode!=null) app.keyCode = app.cryptify(app.keyCode, 'jottings'); // saved key was encrypted
@@ -444,9 +396,9 @@
   if (app.jottings) {
     app.jottings = JSON.parse(app.jottings);	  
   }
-  else {     // ...or if none, use fake data
-	  console.log("data:"+fakeData);
-	  app.jottings = fakeData.jottings; // data.jottings
+  else {     // ...or if none, use default data
+	  console.log("data:"+defaultData);
+	  app.jottings = defaultData.jottings; // data.jottings
 	  console.log("jottings:"+app.jottings);
   }
   // display top level
