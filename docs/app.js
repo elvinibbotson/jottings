@@ -25,7 +25,7 @@
   // EVENT LISTENERS
   document.getElementById("heading").addEventListener('click', function() { // HEADING
   	console.log("edit heading");
-	if(app.path.length>0) { // no effect at top level
+	if(app.path.length>0) { // can edit list names
 		document.getElementById('butDelete').disabled=false;
 		document.getElementById('butDelete').style.color='red';
 		console.log("jotting content: "+app.jotting.content);
@@ -40,8 +40,22 @@
 		document.getElementById('text').value=app.listName;
 		console.log("app.jotting is "+app.jotting.text);
 	}
+	else { // tapping 'Jottings' header saves jottings.json file
+		var jottings = JSON.stringify(app.jottings);
+		var blob=new Blob([jottings], {type:"data:application/json"});
+		// return navigator.msSaveBlob(blob, 'jottings.json'); // only in Microsoft browsers
+		var a =document.createElement('a');
+		a.style.display='none';
+    		var url = window.URL.createObjectURL(blob);
+    		a.href= url;
+    		a.download='jottings.json';
+    		document.body.appendChild(a);
+    		a.click();
+		console.log("jottings file saved");
+		 // saved jottings can be copied into defaultData (below) for installing on a new device
+	}
   });
-  
+  /*
   document.getElementById('butFile').addEventListener('click', function() { // FILE BUTTON
     // save jottings to a file which can be copied into defaultData (below) for installing on a new device
 	var jottings = JSON.stringify(app.jottings);
@@ -56,7 +70,7 @@
     a.click();
 	console.log("jottings file saved");
   });
-  
+  */
   document.getElementById('butBack').addEventListener('click', function() { // BACK BUTTON
     // back up a level (or close app if at top level)
     console.log("BACK");
@@ -350,10 +364,10 @@
   	}
 	if(app.path.length<1) {
 	  document.getElementById("butBack").style.display="none";
-	  document.getElementById("butFile").style.display="block";
+	  // document.getElementById("butFile").style.display="block";
   	}
 	else {
-	  document.getElementById("butFile").style.display="none";
+	  // document.getElementById("butFile").style.display="none";
 	  document.getElementById("butBack").style.display="block";
 	}
   }

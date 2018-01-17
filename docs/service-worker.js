@@ -4,7 +4,6 @@ var filesToCache = [
 	'/index.html',
 	'/app.js',
 	'/inline.css',
-	'/fileButton24px.svg',
 	'/addButton24px.svg',
 	'/backButton24px.svg'
 ];
