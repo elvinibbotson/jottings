@@ -47,7 +47,18 @@
 	var jottings = JSON.stringify(app.jottings);
 	var blob=new Blob([jottings], {type:"data:application/json"});
 	  console.log("saveBlob is "+navigator.msSaveBlob);
-	  return navigator.msSaveBlob(blob, 'jottings.json');
+	  // return navigator.msSaveBlob(blob, 'jottings.json');
+	  var a =document.createElement('a');
+	  a.style.display='none';
+    var url = window.URL.createObjectURL(blob);
+    a.href= url;
+    a.download='jottings.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){  // fixes firefox html removal bug
+        window.URL.revokeObjectURL(url);
+        a.remove();
+    }, 500);
 		  console.log("saved");
 
 	/*save to OneDrive
