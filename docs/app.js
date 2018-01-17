@@ -45,6 +45,29 @@
   document.getElementById('butFile').addEventListener('click', function() { // FILE BUTTON
     // save jottings to a file which can be copied into  fakeData (below) for installing on a new device
 	var jottings = JSON.stringify(app.jottings);
+	var blob=new Blob([jottings], {type:"data:application/json"});
+	  console.log("saveBlob is "+navigator.msSaveBlob);
+	  return navigator.msSaveBlob(blob, 'jottings.json');
+		  console.log("saved");
+
+	/*save to OneDrive
+	var odOptions = {
+  		clientId: "cc81cb02-a317-47b6-8472-1f1522e68563",
+ 		action: "save",
+  		sourceInputElementId: "fileUploadControl",
+ 		sourceUri: "jottings",
+  		fileName: "jottings.json",
+  		openInNewWindow: true,
+  		advanced: {},
+  		success: function(files) { alert("jottings.json saved to OneDrive");},
+  		progress: function(p) { console.log(".");},
+  		cancel: function() { alert("save cancelled!"); return;},
+  		error: function(e) { alert("save error: "+error);}
+	}
+	OneDrive.save(odOptions);
+	*/
+
+	/*
 	var blob=new Blob([jottings],{type:'text/plain;charset=utf-8'});
 	console.log("blob ready");
 	  alert("blob ready");
@@ -52,6 +75,7 @@
 	saveAs(blob,'jottings.json'); // uses Filesaver.js function saveAs
 	console.log("jottings saved to file jottings.json");
 	  alert("file saved");
+	*/
   });
   
   document.getElementById('butBack').addEventListener('click', function() { // BACK BUTTON
