@@ -110,11 +110,6 @@ button {
     outline: none;
     cursor: pointer;
  }
- /*
-  .header #butFile {
-    background: url(fileButton24px.svg) center center no-repeat;
- }
- */
   .header #butBack {
     background: url(backButton24px.svg) center center no-repeat;
  }
