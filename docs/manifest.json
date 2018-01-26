@@ -2,8 +2,16 @@
   "name": "Jottings",
   "short_name": "Jottings",
   "icons": [{
+      "src": "images/icons/icon75px.png",
+      "sizes": "75x75",
+      "type": "image/png"
+    }, {
       "src": "images/icons/icon150px.png",
       "sizes": "150x150",
+      "type": "image/png"
+    },{
+      "src": "images/icons/icon512px.png",
+      "sizes": "512x512",
       "type": "image/png"
     }],
   "start_url": "/index.html",
