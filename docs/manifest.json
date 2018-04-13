@@ -1,6 +1,8 @@
 {
   "name": "Jottings",
   "short_name": "Jottings",
+  "display":"fullscreen",
+  "orientation":"portrait",
   "icons": [{
       "src": "images/icons/icon75px.png",
       "sizes": "75x75",
