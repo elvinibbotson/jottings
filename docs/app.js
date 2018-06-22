@@ -19,7 +19,8 @@
 	listName: 'Jottings',
 	keyCode: null,
 	locked: true,
-	secure: false
+	secure: false,
+	db: null
   };
 
   // EVENT LISTENERS
@@ -61,7 +62,11 @@
     console.log("BACK");
 	var list=app.jottings;
 	app.path.pop();
-	if(app.path.length>0) {
+	if(app.path.length<1) { // close app
+		// save data as 'jottings.json' then close page
+		self.close();
+	}
+	else if(app.path.length>0) {
 	 	var i=0;
 		while(i<app.path.length) {
 			list=list[app.path[i++]];
@@ -347,12 +352,14 @@
 		}
 	  	app.list.appendChild(listItem);
   	}
+	/*
 	if(app.path.length<1) {
 	  document.getElementById("butBack").style.display="none";
   	}
 	else {
 	  document.getElementById("butBack").style.display="block";
 	}
+	*/
   }
   
   // ENCRYPT/DECRYPT TEXT USING KEY
@@ -398,6 +405,29 @@
 	  app.jottings = defaultData.jottings; // data.jottings
 	  console.log("jottings:"+app.jottings);
   }
+  //  temporary code to create and populate database
+  var request = window.indexedDB.open("jottingsDB");
+  	request.onsuccess = function(event) {
+		app.db=event.target.result;
+		console.log("DB open");
+		var dbObjectStore = dbTransaction.objectStore('jottings');
+		console.log("indexedDB objectStore ready");
+		for(var i in jottings) {
+			dbObjectStore.add(jottings[i]);
+		}
+		alert("jottings added to database);
+	}
+	request.onupgradeneeded = function(event) {
+		var dbObjectStore = event.currentTarget.result.createObjectStore("jottings", { keyPath: "id", autoIncrement: true });
+		alert("jottings database ready");
+		// add code to read data from saved jottings archive
+	}
+ 	request.onerror = function(event) {
+		alert("indexedDB error code "+event.target.errorCode);
+		var jottingss = defaultData.jottings;
+		alert("use default data");
+	};
+  
   // display top level
   app.jottingList = app.jottings;
   app.listName="Jottings";
