@@ -97,6 +97,7 @@
     					a.click();
 					// alert("jottings file saved");
 					// self.close(); // close application
+					setTimeout(function() {self.close();}, 5000);
 				}
 			}
 		}
