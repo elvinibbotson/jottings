@@ -30,7 +30,6 @@
 		if (app.path.length> 0) { // can edit list names
 			document.getElementById('butDelete').disabled = false;
 			document.getElementById('butDelete').style.color = 'red';
-			console.log("jotting content: " + app.jotting.content);
 			// try this...
 			console.log(app.jottings.length + " items");
 			if (app.jottings.length> 0) { // cannot delete non-empty lists
@@ -75,6 +74,7 @@
 			var dbObjectStore = dbTransaction.objectStore('jottings');
 			console.log("indexedDB objectStore ready");
 			var request = dbObjectStore.openCursor();
+			var jottings=[];
 			request.onsuccess = function(event) {  
 				var cursor = event.target.result;  
     				if (cursor) {
@@ -83,7 +83,7 @@
 					cursor.continue();  
     				}
 				else {
-					console.log(jottings.length+" jottings to save");
+					alert(jottings.length+" jottings to save");
 					var data={'jottings': jottings};
 					var json=JSON.stringify(data);
 					var blob = new Blob([json], {type:"data:application/json"});
@@ -455,13 +455,14 @@
 			if (cursor) {
 				if(cursor.value.parent == app.listID) {
 					app.jottings.push(cursor.value);
-					alert("jotting id: " + cursor.value.id + "; " + cursor.value.text + "; list: " + cursor.value.list + "; secure: " + cursor.value.secure + "; parent: " + cursor.value.parent + "; content: " + cursor.value.content);
+					console.log("jotting id: " + cursor.value.id + "; " + cursor.value.text + "; list: " + cursor.value.list + "; secure: " + cursor.value.secure + "; parent: " + cursor.value.parent + "; content: " + cursor.value.content);
 				}
 				cursor.continue ();
 			}
 			else {
 				console.log("No more entries! " + app.jottings.length + " jottings");
 				// temporary code to convert from .contents[] to .parent approach
+				/* this code has done its job - parents & security assigned & no content left
 				jotting = {};
 				for(var i in app.jottings) {
 					app.jottings[i].parent == app.listID;
@@ -487,6 +488,7 @@
 					};
 					request.onerror = function(event) {console.log("error updating jotting "+app.jottings[i].text + "in database");};
 				};
+				*/
 				// jottings loaded - build list
 				console.log("populate list for path " + app.path + " with " + app.jottings.length + " items");
 				document.getElementById("heading").innerHTML = app.listName;
