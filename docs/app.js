@@ -87,16 +87,16 @@
 					var data={'jottings': jottings};
 					var json=JSON.stringify(data);
 					var blob = new Blob([json], {type:"data:application/json"});
-  					var a =document.createElement('a');
-					a.style.display='none';
+  					var a = document.createElement('a');
+					a.style.display = 'none';
     					var url = window.URL.createObjectURL(blob);
 					alert("data ready to save: "+blob.size+" bytes");
    			 		a.href= url;
    			 		a.download='jottings.json';
     					document.body.appendChild(a);
     					a.click();
-					alert("jottings file saved");
-					self.close(); // close application
+					// alert("jottings file saved");
+					// self.close(); // close application
 				}
 			}
 		}
