@@ -65,10 +65,11 @@
 	document.getElementById('butBack').addEventListener('click', function () { // BACK BUTTON
 		// back up a level (or close app if at top level)
 		console.log("BACK");
-		var list = app.jottings;
+		// var list = app.jottings;
 		// app.path.pop();
 		if (app.path.length< 1) { // top level - save data and close app
 			// save data as 'jottings.json' then close page
+			alert("save to file and exit");
 			var dbTransaction = app.db.transaction('jottings',"readwrite");
 			console.log("indexedDB transaction ready");
 			var dbObjectStore = dbTransaction.objectStore('jottings');
@@ -454,7 +455,7 @@
 			if (cursor) {
 				if(cursor.value.parent == app.listID) {
 					app.jottings.push(cursor.value);
-					console.log("jotting id: " + cursor.value.id + "; " + cursor.value.text + "; list: " + cursor.value.list + "; secure: " + cursor.value.secure + "; parent: " + cursor.value.parent + "; content: " + cursor.value.content);
+					alert("jotting id: " + cursor.value.id + "; " + cursor.value.text + "; list: " + cursor.value.list + "; secure: " + cursor.value.secure + "; parent: " + cursor.value.parent + "; content: " + cursor.value.content);
 				}
 				cursor.continue ();
 			}
