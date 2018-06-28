@@ -12,16 +12,19 @@
 		deleteDialog: document.getElementById('deleteDialog'),
 		keyDialog: document.getElementById('keyDialog'),
 		newKeyDialog: document.getElementById('newKeyDialog'),
+		fileChooserDialog: document.getElementById('fileChooserDialog'),
+		fileChooser: document.getElementById('fileChooser'),
 		jottings: [],
-		// jottingList: [],
 		listID: null,
 		jotting: null,
 		path: [],
 		list: document.getElementById('list'),
 		listName: 'Jottings',
 		keyCode: null,
+		lastSave: null,
 		locked: true,
-		secure: false
+		secure: false,
+		months: "JanFebMarAprMayJunJulAugSepOctNovDec"
 	};
 
 	// EVENT LISTENERS
@@ -41,24 +44,6 @@
 			document.getElementById('text').value = app.listName;
 			console.log("app.jotting is " + app.jotting.text);
 		}
-		/*
-		else { // tapping 'Jottings' header saves jottings.json file
-			var jottings = JSON.stringify(app.jottings);
-			var blob = new Blob([jottings], {
-				type:"data:application/json"
-			});
-			// return navigator.msSaveBlob(blob, 'jottings.json'); // only in Microsoft browsers
-			var a = document.createElement('a');
-			a.style.display = 'none';
-			var url = window.URL.createObjectURL(blob);
-			a.href = url;
-			a.download = 'jottings.json';
-			document.body.appendChild(a);
-			a.click();
-			console.log("jottings file saved");
-			// saved jottings can be copied into defaultData (below) for installing on a new device
-		}
-		*/
 	});
 
 	document.getElementById('butBack').addEventListener('click', function () { // BACK BUTTON
@@ -67,62 +52,59 @@
 		// var list = app.jottings;
 		// app.path.pop();
 		if (app.path.length< 1) { // top level - save data and close app
-			// save data as 'jottings.json' then close page
-			alert("save to file and exit");
-			var dbTransaction = app.db.transaction('jottings',"readwrite");
-			console.log("indexedDB transaction ready");
-			var dbObjectStore = dbTransaction.objectStore('jottings');
-			console.log("indexedDB objectStore ready");
-			var request = dbObjectStore.openCursor();
-			var jottings=[];
-			request.onsuccess = function(event) {  
-				var cursor = event.target.result;  
-    				if (cursor) {
-					jottings.push(cursor.value);
-					console.log("jotting "+cursor.key+", id: "+cursor.value.id+", "+cursor.value.text);
-					cursor.continue();  
-    				}
-				else {
-					alert(jottings.length+" jottings to save");
-					var data={'jottings': jottings};
-					var json=JSON.stringify(data);
-					var blob = new Blob([json], {type:"data:application/json"});
-  					var a = document.createElement('a');
-					a.style.display = 'none';
-    					var url = window.URL.createObjectURL(blob);
-					alert("data ready to save: "+blob.size+" bytes");
-   			 		a.href= url;
-   			 		a.download='jottings.json';
-    					document.body.appendChild(a);
-    					a.click();
-					// alert("jottings file saved");
-					// self.close(); // close application
-					setTimeout(function() {self.close();}, 5000);
+			var today= new Date();
+			var fileName = "jottings" + today.getDate();
+			var n = today.getMonth();
+			fileName += app.months.substr(n*3,3);
+			var n = today.getFullYear() % 100;
+			if(n<10) fileName+="0";
+			fileName += n + ".json";
+			today = Math.floor(today.getTime()/86400000); // whole days
+			app.lastSave = window.localStorage.lastSave; // load date of last file save
+			console.log("lastSave is " + app.lastSave);
+			if((app.lastSave == null) || ((today - app.lastSave) > 7)) { // >7 days since last file save
+				// save data as 'jottingsDDMonYY.json' then close page
+				console.log("save to file and exit");
+				var dbTransaction = app.db.transaction('jottings',"readwrite");
+				console.log("indexedDB transaction ready");
+				var dbObjectStore = dbTransaction.objectStore('jottings');
+				console.log("indexedDB objectStore ready");
+				var request = dbObjectStore.openCursor();
+				var jottings=[];
+				request.onsuccess = function(event) {  
+					var cursor = event.target.result;  
+    					if (cursor) {
+						jottings.push(cursor.value);
+						console.log("jotting "+cursor.key+", id: "+cursor.value.id+", "+cursor.value.text);
+						cursor.continue();  
+    					}
+					else {
+						console.log(jottings.length+" jottings to save");
+						var data={'jottings': jottings};
+						var json=JSON.stringify(data);
+						var blob = new Blob([json], {type:"data:application/json"});
+  						var a = document.createElement('a');
+						a.style.display = 'none';
+    						var url = window.URL.createObjectURL(blob);
+						console.log("data ready to save: "+blob.size+" bytes");
+   			 			a.href = url;
+   			 			a.download = fileName;
+    						document.body.appendChild(a);
+    						a.click();
+						window.localStorage.lastSave = today;
+						console.log("lastSave date saved");
+						setTimeout(function() {self.close();}, 5000);
+					}
 				}
 			}
+			else self.close();
 		}
 		else {
 			app.path.pop();
 			if (app.path.length> 0) {
 				app.listID = app.path[app.path.length-1];
-				/*
-				var i = 0;
-				while (i< app.path.length) {
-					list = list[app.path[i++]];
-					console.log("list: " + list);
-				}
-				var text = list.text;
-				if (list.secure> 0) text = app.cryptify(text, app.keyCode); // deal with secure lists
-				app.listName = text;
-				app.secure = (list.secure> 0);
-				console.log("secure is now " + app.secure);
-				// app.listName=list.text;
-				list = list.content;
-				*/
 			}
 			else app.listID = null; // app.listName = "Jottings";
-			// console.log("list name: " + app.listName);
-			// app.jottingList = list;
 			app.populateList();
 		};
 	});
@@ -164,8 +146,7 @@
 		}
 		app.jottings.push(jotting);
 		console.log("save new jotting " + jotting.text + "; parent: " + jotting.parent + "; secure: " + jotting.secure);
-		// console.log("jottings: " + app.jottings[0].text + " secure: " + app.jottings[0].secure);
-		// new code to save new jotting to indexedDB
+		// save new jotting to indexedDB
 		var dbTransaction = app.db.transaction('jottings',"readwrite");
 		console.log("indexedDB transaction ready");
 		var dbObjectStore = dbTransaction.objectStore('jottings');
@@ -177,19 +158,14 @@
 			app.toggleDialog('addDialog', false);
 		};
 		request.onerror = function(event) {console.log("error adding new jotting");};
-		// app.saveJottings(); // ...and save
-		// app.populateList();
-		// app.toggleDialog('addDialog', false);
 	});
 
 	document.getElementById('butCancelNewJotting').addEventListener('click', function () { // CANCEL NEW JOTTING
-		// Close the add new jotting dialog
-		app.toggleDialog('addDialog', false);
+		app.toggleDialog('addDialog', false); // just close the add new jotting dialog
 	});
 
 	document.getElementById('butDelete').addEventListener('click', function () { // DELETE JOTTING/LIST
-		// initiate delete jotting/list
-		var text = app.jotting.text;
+		var text = app.jotting.text; // initiate delete jotting/list
 		console.log("delete jotting " + text);
 		if (app.jotting.secure> 0) text = app.cryptify(text, app.keyCode);
 		app.toggleDialog("deleteDialog", true);
@@ -198,82 +174,48 @@
 	});
 
 	document.getElementById('butSave').addEventListener('click', function () { // SAVE JOTTING AFTER EDIT
-		// Save edited jotting
-		var text = document.getElementById("text").value;
+		var text = document.getElementById("text").value; // Save edited jotting
 		app.toggleDialog('editDialog', false);
 		console.log("Save jotting: " + text);
 		if (app.jotting.secure) app.jotting.text = app.cryptify(text, app.keyCode); // encrypt if secure jotting
 		else app.jotting.text = text;
 		if (app.jotting.list) app.listName = text; // *********** PROBABLY NOT NEEDED ***********
-		// new code to save amended jotting to indexedDB
+		// save amended jotting to indexedDB
 		var dbTransaction = app.db.transaction('jottings',"readwrite");
 		console.log("indexedDB transaction ready");
 		var dbObjectStore = dbTransaction.objectStore('jottings');
 		console.log("indexedDB objectStore ready");
-		// app.jottings[app.jotting.id]=app.jotting;
-		// put amended jotting in indexedDB
 		var request = dbObjectStore.put(app.jotting); // update jotting in database
 		request.onsuccess = function(event)  {
 			console.log("jotting "+app.jotting.id+" updated");
 			app.populateList();
 		};
 		request.onerror = function(event) {console.log("error updating jotting "+app.jotting.id);};
-		// app.saveJottings();
-		// app.populateList();
 	});
 
 	document.getElementById('butCancelEdit').addEventListener('click', function () { // CANCEL EDIT
-		// Close the edit jotting dialog
-		app.toggleDialog('editDialog', false);
+		app.toggleDialog('editDialog', false); // close the edit jotting dialog
 	});
 
 	document.getElementById('butDeleteConfirm').addEventListener('click', function () { // CONFIRM DELETE
-		// confirm delete jotting/list
-		console.log("delete " + app.jotting.text);
-		// var list=app.jottings;
-		// var i=0;
+		console.log("delete " + app.jotting.text); // confirm delete jotting/list
 		if (app.jottings.length< 1) { // delete empty list (below top level) so...
-			// var list = app.jottings;
-			// var i = 0;
 			console.log("path length: " + app.path.length);
 			app.path.pop(); // deleting this (empty) list
 			if (app.path.length> 0) {
 				app.listID = app.path[app.path.length-1];
-				/*
-				while (i< app.path.length) {
-					console.log("path[" + i + "]: " + app.path[i]);
-					list = list[app.path[i++]];
-					console.log("list: " + list.text + " - first item: " + list.content[0].text);
-				}
-				app.jottingList = list.content; // ...jottingList is parent list
-				app.listName = list.text;
-				*/
 			}
 			else {
 				app.listID = null;
-				// app.jottingList = app.jottings;
-				// app.listName = "Jottings";
 			}
-			/*
-			// test code
-			console.log("list: " + app.jottingList);
-			i = 0;
-			while (i< app.jottingList.length) {
-				console.log("item " + i + ": " + app.jottingList[i++].text);
-			}
-			i = app.jottingList.indexOf(app.jotting);
-			console.log("item " + i);
-			app.jottingList.splice(i, 1);
-			*/
 		}
 		else { // delete jotting  ********** NOT NEEDED? ************
 			var i = app.jottings.indexOf(app.jotting);
 			console.log("item " + i);
 			app.jottings.splice(i, 1);
 			console.log("list name: " + app.listName);
-			// app.populateList();
 		}
-		// new code to delete jotting in database
+		// delete jotting in database
 		var dbTransaction = app.db.transaction("jottings","readwrite");
 		console.log("indexedDB transaction ready");
 		var dbObjectStore = dbTransaction.objectStore("jottings");
@@ -283,13 +225,11 @@
 		};
 		request.onerror = function(event) {console.log("error deleting jotting "+app.jotting.id);};
 		app.populateList();
-		// app.saveJottings();
 		app.toggleDialog('deleteDialog', false);
 	});
 
 	document.getElementById('butCancelDelete').addEventListener('click', function () { // CANCEL DELETE
-		// Close the delete dialog
-		app.toggleDialog('deleteDialog', false);
+		app.toggleDialog('deleteDialog', false); // close delete dialog
 	});
 
 	document.getElementById('butSaveKey').addEventListener('click', function () { // SAVE NEW SECURITY KEY
@@ -308,8 +248,7 @@
 	});
 
 	document.getElementById('butCancelKey').addEventListener('click', function () { // CANCEL NEW KEY
-		// Close the new key dialog
-		app.toggleDialog('newKeyDialog', false);
+		app.toggleDialog('newKeyDialog', false); // close new key dialog
 	});
 
 	document.getElementById("butUnlock").addEventListener('click', function () { // UNLOCK SECURE LIST
@@ -319,8 +258,7 @@
 	});
 
 	document.getElementById("butCancelUnlock").addEventListener('click', function () { // CANCEL UNLOCK
-		// Close the key dialog
-		app.toggleDialog('keyDialog', false);
+		app.toggleDialog('keyDialog', false); // close key dialog
 	});
 
 	// SHOW/HIDE DIALOGS
@@ -365,20 +303,12 @@
 		}
 		else if(d=='fileChooserDialog') { // toggle file chooser dialog
 	  	 if (visible) {
-      		id("fileChooserDialog").classList.add('dialog-container--visible');
+      		app.fileChooserDialog.classList.add('dialog-container--visible');
     		} else {
-      		id("fileChooserDialog").classList.remove('dialog-container--visible');
+      		app.fileChooserDialog.classList.remove('dialog-container--visible');
     		}
 	  }
 	};
-
-	/* Save jottings to localStorage FOR NOW - LATER USE HOODIE
-	app.saveJottings = function () {
-		var jottings = JSON.stringify(app.jottings);
-		localStorage.jottings = jottings;
-		console.log("JOTTINGS SAVED: " + jottings);
-	};
-	*/
 
 	// OPEN JOTTING/LIST
 	app.openItem = function () {		
@@ -387,13 +317,11 @@
 		var text = item.textContent;
 		console.log("open jotting " + text);
 		var i = 0;
-		// new approach deals with secure jottings
-		var found = false;
+		var found = false; // deal with secure jottings
 		var t = "";
 		while (i< app.jottings.length && !found) {
 			t = app.jottings[i].text;
 			if (app.jottings[i].secure> 0) t = app.cryptify(t, app.keyCode);
-			// console.log("item " + i + ": " + t);
 			if (t == text) found = true;
 			else i++;
 		}
@@ -401,7 +329,6 @@
 		app.jotting = app.jottings[i];
 		console.log("open jotting " + app.jotting.text + " secure:" + app.jotting.secure);
 		if(!app.jotting.list) // just a jotting - open for editing
-		// if (app.jotting.content == null) // just a jotting - open for editing
 		{
 			document.getElementById('butDelete').disabled = false;
 			document.getElementById('butDelete').style.color = 'red';
@@ -416,8 +343,6 @@
 			else app.secure = false;
 			console.log("secure is " + app.secure);
 			app.listID = app.jotting.id;
-			// app.jottingList = app.jotting.content;
-			// app.listName = t;
 			app.populateList();
 		}
 		else { // trying to open a secure list before unlocking - show key dialog
@@ -462,34 +387,6 @@
 			}
 			else {
 				console.log("No more entries! " + app.jottings.length + " jottings");
-				// temporary code to convert from .contents[] to .parent approach
-				/* this code has done its job - parents & security assigned & no content left
-				jotting = {};
-				for(var i in app.jottings) {
-					app.jottings[i].parent == app.listID;
-					app.jottings[i].secure = (app.jottings[i].secure>0); // secure now true/false
-					if(app.jottings[i].content) {
-						jotting.list = true;
-						for(var j in app.jottings[i].content) {
-							jotting = app.jottings[i].content[j];
-							jotting.parent = app.jottings[i].id;
-							var request = dbObjectStore.add(jotting);
-							request.onsuccess = function(event) {
-								console.log("jotting "+ jotting.text+ " added to database");
-							};
-							request.onerror = function(event) {
-								console.log("error adding jotting "+jotting.text+" to database");
-							};
-						}
-						app.jottings[i].content = null;
-					}
-					var request = dbObjectStore.put(app.jottings[i]); // update jotting in database
-					request.onsuccess = function(event)  {
-						console.log("jotting "+app.jottings[i].text+" updated in database");
-					};
-					request.onerror = function(event) {console.log("error updating jotting "+app.jottings[i].text + "in database");};
-				};
-				*/
 				// jottings loaded - build list
 				console.log("populate list for path " + app.path + " with " + app.jottings.length + " items");
 				document.getElementById("heading").innerHTML = app.listName;
@@ -526,34 +423,11 @@
 		return result;
 	};
 
-	/* MINIMAL DATA FOR INITIAL INSTALLATION
-	// to preserve jottings from one device to another...
-	// tap on Jottings header & save jottings.json
-	// email data to self and copy into defaultData
-	// refresh app.js at github.io
-	// saved jottings should appear by default on new device
-	var defaultData = {
-		jottings: [ {
-			text: 'empty list', secure:0, content: []
-		}]
-	}
-	*/
 	// START-UP CODE
 	app.keyCode = window.localStorage.keyCode; // load any saved key
 	console.log("saved key is " + app.keyCode);
 	if (app.keyCode != null) app.keyCode = app.cryptify(app.keyCode, 'jottings'); // saved key was encrypted
 	console.log("keyCode: " + app.keyCode);
-	/* app.jottings = localStorage.jottings; // load any saved data...
-  console.log("jottings:"+app.jottings);
-  if (app.jottings) {
-    app.jottings = JSON.parse(app.jottings);
-  }
-  else {     // ...or if none, use default data
-	  console.log("data:"+defaultData);
-	  app.jottings = defaultData.jottings; // data.jottings
-	  console.log("jottings:"+app.jottings);
-  }
-  */
 	// load jottings from database
 	var request = window.indexedDB.open("jottingsDB");
 	request.onsuccess = function (event) {
@@ -575,51 +449,36 @@
 				app.container.removeAttribute('hidden');
 				app.isLoading = false;
 			}
-			/*
-			var cursor = event.target.result;
-			if (cursor) {
-				app.jottings.push(cursor.value);
-				console.log("jotting " + cursor.key + ", id: " + cursor.value.id + ", text: " + cursor.value.text);
-				cursor.continue ();
-			}
-			else {
-				console.log("No more entries! " + app.jottings.length + " jottings");
-				app.jottingList = app.jottings; // display top level
-				app.listName = "Jottings";
-				app.populateList();
-				if (app.isLoading) { // hide loading spinner
-					app.spinner.setAttribute('hidden', true);
-					app.container.removeAttribute('hidden');
-					app.isLoading = false;
-				}
-			}
-			*/
 		};
 	};
 	request.onupgradeneeded = function (event) {
 		var dbObjectStore = event.currentTarget.result.createObjectStore("jottings", {
 			keyPath: "id", autoIncrement: true
 		});
-		alert("jottings database ready");
-		// ******************** add code to read data from saved jottings archive ***************
-		id("fileChooser").addEventListener('change', function() {
-			var file=event.target.files[0];
-	  		var fileName=file.name;
-	  		console.log("file chosen: "+fileName);
+		console.log("jottings database ready");
+		app.fileChooser.addEventListener('change', function() {
+			var file = app.fileChooser.files[0];
+			console.log("file: "+file+" name: "+file.name);
 	  		var fileReader=new FileReader();
-	  		fileReader.addEventListener('load', function() {
-				console.log("file read");
-	  			var data=event.target.result;
+	  		fileReader.addEventListener('load', function(evt) {
+				console.log("file read: "+evt.target.result);
+	  			var data=evt.target.result;
 				var json=JSON.parse(data);
 				console.log("json: "+json);
 				var jottings=json.jottings;
-				console.log(jottings.length+" jottings loaded from file "+fileName);
+				console.log(jottings.length+" jottings loaded");
+				var dbTransaction = app.db.transaction('jottings',"readwrite");
+				dbObjectStore = dbTransaction.objectStore('jottings');
 				for(var i=0;i<jottings.length;i++) {
-					console.log(jottings[i].text)
-					dbObjectStore.add(jottings[i]);
+					console.log("add "+jottings[i].id+": "+jottings[i].text+" parent: "+jottings[i].parent);
+					var request = dbObjectStore.add(jottings[i]);
+					request.onsuccess = function(e) {
+						console.log(jottings.length+" jottings added to database");
+					};
+					request.onerror = function(e) {console.log("error adding jotting");};
 				};
 				app.toggleDialog('fileChooserDialog',false);
-				alert("jottingsDB created and populated");
+				alert("jottingsDB created and populated - restart");
 	  		});
 	  		fileReader.readAsText(file);
   		},false);
@@ -630,17 +489,6 @@
 		// var jottings = defaultData.jottings;
 		// alert("use default data");
 	};
-	/* display top level
-	app.jottingList = app.jottings;
-	app.listName = "Jottings";
-	app.populateList();
-	// hide loading spinner
-	if (app.isLoading) {
-		app.spinner.setAttribute('hidden', true);
-		app.container.removeAttribute('hidden');
-		app.isLoading = false;
-	}
-	*/
 	// implement service worker if browser is PWA friendly
 	if ('serviceWorker' in navigator) {
 		navigator.serviceWorker
