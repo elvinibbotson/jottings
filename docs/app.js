@@ -93,11 +93,14 @@
     						a.click();
 						window.localStorage.lastSave = today;
 						console.log("lastSave date saved");
-						setTimeout(function() {self.close();}, 5000);
+						// setTimeout(function() {self.close();}, 5000);
 					}
 				}
 			}
-			else self.close();
+			else {
+			alert("only "+(today - app.lastSave)+" days since last save");
+			// setTimeout(function() {self.close();}, 5000);
+		}
 		}
 		else {
 			app.path.pop();
@@ -490,6 +493,7 @@
 		// alert("use default data");
 	};
 	// implement service worker if browser is PWA friendly
+	/*
 	if ('serviceWorker' in navigator) {
 		navigator.serviceWorker
 			 .register('./service-worker.js')
@@ -497,5 +501,14 @@
 			console.log('Service Worker Registered');
 		});
 	}
-	else console.log("not PWA friendly");
+	*/
+	if (navigator.serviceWorker.controller) {
+		console.log('Active service worker found, no need to register')
+	} else { //Register the ServiceWorker
+		navigator.serviceWorker.register('sw.js', {
+			scope: '/Jottings/'
+		}).then(function(reg) {
+			console.log('Service worker has been registered for scope:'+ reg.scope);
+		});
+	}
 })();
