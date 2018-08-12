@@ -109,9 +109,12 @@
 		if (app.path.length> 0) {
 			app.listID = app.path[app.path.length-1];
 		}
-		else app.listID = null; // app.listName = "Jottings";
+		else {
+			app.listID = null; // app.listName = "Jottings";
+			document.getElementById("butBack").style.display="none";
+		}
 		app.populateList();
-		document.getElementById("butBack").style.display="none";
+		
 	});
 
 	document.getElementById('butAdd').addEventListener('click', function () { // ADD BUTTON
