@@ -112,11 +112,14 @@ button {
  }
   .header #butBack {
     background: url(backButton24px.svg) center center no-repeat;
+	margin-right: 30px;
  }
+ /*
   .header #butAdd {
     background: url(addButton24px.svg) center center no-repeat;
 	margin-right: 30px;
  }
+ */
 .header__title {
   font-weight: 400;
   font-size: 1em;
@@ -125,6 +128,30 @@ button {
   -webkit-flex: 1;
       -ms-flex: 1;
           flex: 1;
+}
+
+.round-button {
+	display: block;
+	position: fixed;
+	width: 50px;
+	height: 50px;
+	border: 0px solid #222;
+	border-radius: 50%;
+	background: #3F51B5;
+	box-shadow: 0,0,3px,gray;
+	z-index: 50;
+}
+
+.round-button img {
+	display: block;
+	width: 24px;
+	height: 24px;
+	padding: 13px;
+}
+
+#butAdd {
+	right: 20px;
+	bottom: 50px;
 }
 
 .loader {
