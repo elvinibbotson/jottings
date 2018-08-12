@@ -110,9 +110,14 @@ button {
     outline: none;
     cursor: pointer;
  }
+  .header #butClose {
+    background: url(closeButton24px.svg) center center no-repeat;
+	margin-right: 30px;
+ }
   .header #butBack {
     background: url(backButton24px.svg) center center no-repeat;
 	margin-right: 30px;
+	display: none;
  }
  /*
   .header #butAdd {

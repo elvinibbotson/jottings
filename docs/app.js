@@ -45,12 +45,10 @@
 			console.log("app.jotting is " + app.jotting.text);
 		}
 	});
-
-	document.getElementById('butBack').addEventListener('click', function () { // BACK BUTTON
-		// back up a level (or close app if at top level)
-		console.log("BACK");
-		// var list = app.jottings;
-		// app.path.pop();
+	
+	document.getElementById('butClose').addEventListener('click', function () { // CLOSE BUTTON
+		// close app if at top level
+		console.log("CLOSE/SAVE");
 		if (app.path.length< 1) { // top level - save data and close app
 			var today= new Date();
 			var fileName = "jottings" + today.getDate();
@@ -98,18 +96,22 @@
 				}
 			}
 			else {
-			alert("only "+(today - app.lastSave)+" days since last save");
-			// setTimeout(function() {self.close();}, 5000);
-		}
-		}
-		else {
-			app.path.pop();
-			if (app.path.length> 0) {
-				app.listID = app.path[app.path.length-1];
+				alert("only "+(today - app.lastSave)+" days since last save");
+				// setTimeout(function() {self.close();}, 5000);
 			}
-			else app.listID = null; // app.listName = "Jottings";
-			app.populateList();
-		};
+		}
+	});
+
+	document.getElementById('butBack').addEventListener('click', function () { // BACK BUTTON
+		// back up a level
+		console.log("BACK");
+		app.path.pop();
+		if (app.path.length> 0) {
+			app.listID = app.path[app.path.length-1];
+		}
+		else app.listID = null; // app.listName = "Jottings";
+		app.populateList();
+		document.getElementById("butBack").style.display="none";
 	});
 
 	document.getElementById('butAdd').addEventListener('click', function () { // ADD BUTTON
@@ -347,6 +349,7 @@
 			console.log("secure is " + app.secure);
 			app.listID = app.jotting.id;
 			app.populateList();
+			document.getElementById("butBack").style.display="block";
 		}
 		else { // trying to open a secure list before unlocking - show key dialog
 			if (app.keyCode == null) app.toggleDialog('newKeyDialog', true); // set key for first time
