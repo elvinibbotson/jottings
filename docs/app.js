@@ -12,7 +12,7 @@
 		deleteDialog: document.getElementById('deleteDialog'),
 		keyDialog: document.getElementById('keyDialog'),
 		newKeyDialog: document.getElementById('newKeyDialog'),
-		fileChooserDialog: document.getElementById('fileChooserDialog'),
+		importDialog: document.getElementById('importDialog'),
 		fileChooser: document.getElementById('fileChooser'),
 		jottings: [],
 		listID: null,
@@ -46,61 +46,88 @@
 		}
 	});
 	
-	document.getElementById('butClose').addEventListener('click', function () { // CLOSE BUTTON
-		// close app if at top level
-		console.log("CLOSE/SAVE");
-		if (app.path.length< 1) { // top level - save data and close app
-			var today= new Date();
-			var fileName = "jottings" + today.getDate();
-			var n = today.getMonth();
-			fileName += app.months.substr(n*3,3);
-			var n = today.getFullYear() % 100;
-			if(n<10) fileName+="0";
-			fileName += n + ".json";
-			today = Math.floor(today.getTime()/86400000); // whole days
-			app.lastSave = window.localStorage.lastSave; // load date of last file save
-			console.log("lastSave is " + app.lastSave);
-			if((app.lastSave == null) || ((today - app.lastSave) > 7)) { // >7 days since last file save
-				// save data as 'jottingsDDMonYY.json' then close page
-				console.log("save to file and exit");
-				var dbTransaction = app.db.transaction('jottings',"readwrite");
-				console.log("indexedDB transaction ready");
-				var dbObjectStore = dbTransaction.objectStore('jottings');
-				console.log("indexedDB objectStore ready");
-				var request = dbObjectStore.openCursor();
-				var jottings=[];
-				request.onsuccess = function(event) {  
-					var cursor = event.target.result;  
-    					if (cursor) {
-						jottings.push(cursor.value);
-						console.log("jotting "+cursor.key+", id: "+cursor.value.id+", "+cursor.value.text);
-						cursor.continue();  
-    					}
-					else {
-						console.log(jottings.length+" jottings to save");
-						var data={'jottings': jottings};
-						var json=JSON.stringify(data);
-						var blob = new Blob([json], {type:"data:application/json"});
-  						var a = document.createElement('a');
-						a.style.display = 'none';
-    						var url = window.URL.createObjectURL(blob);
-						console.log("data ready to save: "+blob.size+" bytes");
-   			 			a.href = url;
-   			 			a.download = fileName;
-    						document.body.appendChild(a);
-    						a.click();
-						window.localStorage.lastSave = today;
-						console.log("lastSave date saved");
-						// setTimeout(function() {self.close();}, 5000);
-					}
-				}
-			}
-			else {
-				alert("only "+(today - app.lastSave)+" days since last save");
-				// setTimeout(function() {self.close();}, 5000);
-			}
-		}
+	document.getElementById('buttonMenu').addEventListener('click', function() { // MENU BUTTON
+	  console.log("show menu");
+	  document.getElementById("menu").style.display="block";
 	});
+	
+	document.getElementById("import").addEventListener('click', function() { // IMPORT OPTION
+  		console.log("IMPORT");
+		app.toggleDialog("importDialog", true);
+	})
+	
+	document.getElementById('buttonCancelImport').addEventListener('click', function() { // CANCEL IMPORT DATA
+    app.toggleDialog('importDialog', false);
+	document.getElementById("menu").style.display="none";
+  });
+
+	app.fileChooser.addEventListener('change', function() { // IMPORT FILE
+		var file = app.fileChooser.files[0];
+		console.log("file: "+file+" name: "+file.name);
+	  	var fileReader=new FileReader();
+	  	fileReader.addEventListener('load', function(evt) {
+			console.log("file read: "+evt.target.result);
+	  		var data=evt.target.result;
+			var json=JSON.parse(data);
+			console.log("json: "+json);
+			var jottings=json.jottings;
+			console.log(jottings.length+" jottings loaded");
+			var dbTransaction = app.db.transaction('jottings',"readwrite");
+			var dbObjectStore = dbTransaction.objectStore('jottings');
+			for(var i=0;i<jottings.length;i++) {
+				console.log("add "+jottings[i].id+": "+jottings[i].text+" parent: "+jottings[i].parent);
+				var request = dbObjectStore.add(jottings[i]);
+				request.onsuccess = function(e) {
+					console.log(jottings.length+" jottings added to database");
+				};
+				request.onerror = function(e) {console.log("error adding jotting");};
+			};
+			app.toggleDialog('importDialog',false);
+			alert("jottings imported - restart");
+	  	});
+	  	fileReader.readAsText(file);
+  	},false);
+	
+  document.getElementById("export").addEventListener('click', function() { // EXPORT FILE
+  	console.log("EXPORT");
+	var today= new Date();
+	var fileName = "jottings" + today.getDate();
+	var n = today.getMonth();
+	fileName += app.months.substr(n*3,3);
+	var n = today.getFullYear() % 100;
+	if(n<10) fileName+="0";
+	fileName += n + ".json";
+	var dbTransaction = app.db.transaction('jottings',"readwrite");
+	console.log("indexedDB transaction ready");
+	var dbObjectStore = dbTransaction.objectStore('jottings');
+	console.log("indexedDB objectStore ready");
+	var request = dbObjectStore.openCursor();
+	var jottings=[];
+	request.onsuccess = function(event) {  
+		var cursor = event.target.result;  
+    		if (cursor) {
+			jottings.push(cursor.value);
+			console.log("jotting "+cursor.key+", id: "+cursor.value.id+", "+cursor.value.text);
+			cursor.continue();  
+    		}
+		else {
+			console.log(jottings.length+" jottings to save");
+			var data={'jottings': jottings};
+			var json=JSON.stringify(data);
+			var blob = new Blob([json], {type:"data:application/json"});
+  			var a = document.createElement('a');
+			a.style.display = 'none';
+    			var url = window.URL.createObjectURL(blob);
+			console.log("data ready to save: "+blob.size+" bytes");
+   			a.href = url;
+   			a.download = fileName;
+    			document.body.appendChild(a);
+    			a.click();
+			alert(fileName+" saved to downloads folder");
+			document.getElementById("menu").style.display="none";
+		}
+	}
+  })
 
 	document.getElementById('butBack').addEventListener('click', function () { // BACK BUTTON
 		// back up a level
@@ -309,11 +336,11 @@
 				app.newKeyDialog.classList.remove('dialog-container--visible');
 			}
 		}
-		else if(d=='fileChooserDialog') { // toggle file chooser dialog
+		else if(d=='importDialog') { // toggle file chooser dialog
 	  	 if (visible) {
-      		app.fileChooserDialog.classList.add('dialog-container--visible');
+      		app.importDialog.classList.add('dialog-container--visible');
     		} else {
-      		app.fileChooserDialog.classList.remove('dialog-container--visible');
+      		app.importDialog.classList.remove('dialog-container--visible');
     		}
 	  }
 	};
@@ -341,7 +368,7 @@
 			document.getElementById('butDelete').disabled = false;
 			document.getElementById('butDelete').style.color = 'red';
 			app.toggleDialog("editDialog", true);
-			if (app.jotting.secure> 0) documentt.getElementById("text").value = app.cryptify(app.jotting.text, app.keyCode); // decrypt secure jottings
+			if (app.jotting.secure> 0) document.getElementById("text").value = app.cryptify(app.jotting.text, app.keyCode); // decrypt secure jottings
 			else document.getElementById("text").value = app.jotting.text;
 		}
 		// jotting is a list
@@ -465,49 +492,14 @@
 			keyPath: "id", autoIncrement: true
 		});
 		console.log("jottings database ready");
-		app.fileChooser.addEventListener('change', function() {
-			var file = app.fileChooser.files[0];
-			console.log("file: "+file+" name: "+file.name);
-	  		var fileReader=new FileReader();
-	  		fileReader.addEventListener('load', function(evt) {
-				console.log("file read: "+evt.target.result);
-	  			var data=evt.target.result;
-				var json=JSON.parse(data);
-				console.log("json: "+json);
-				var jottings=json.jottings;
-				console.log(jottings.length+" jottings loaded");
-				var dbTransaction = app.db.transaction('jottings',"readwrite");
-				dbObjectStore = dbTransaction.objectStore('jottings');
-				for(var i=0;i<jottings.length;i++) {
-					console.log("add "+jottings[i].id+": "+jottings[i].text+" parent: "+jottings[i].parent);
-					var request = dbObjectStore.add(jottings[i]);
-					request.onsuccess = function(e) {
-						console.log(jottings.length+" jottings added to database");
-					};
-					request.onerror = function(e) {console.log("error adding jotting");};
-				};
-				app.toggleDialog('fileChooserDialog',false);
-				alert("jottingsDB created and populated - restart");
-	  		});
-	  		fileReader.readAsText(file);
-  		},false);
-  		app.toggleDialog("fileChooserDialog",true);
 	}
 	request.onerror = function (event) {
 		alert("indexedDB error code " + event.target.errorCode);
 		// var jottings = defaultData.jottings;
 		// alert("use default data");
 	};
+	
 	// implement service worker if browser is PWA friendly
-	/*
-	if ('serviceWorker' in navigator) {
-		navigator.serviceWorker
-			 .register('./service-worker.js')
-			 .then(function () {
-			console.log('Service Worker Registered');
-		});
-	}
-	*/
 	if (navigator.serviceWorker.controller) {
 		console.log('Active service worker found, no need to register')
 	} else { //Register the ServiceWorker

@@ -18,9 +18,8 @@
 
 
   <header class="header">
-  	<button id="butClose" class="headerButton" aria-label="Save"></button>
+  	<button id="buttonMenu" type="menu" menu="menu" class="headerButton" aria-label="Menu"></button>
 	<h1 id="heading" class="header__title">Jottings</h1>
-    <!--button id="butAdd" class="headerButton" aria-label="Add"></button-->
 	<button id="butBack" class="headerButton" aria-label="Back"></button>
   </header>
 
@@ -32,6 +31,22 @@
 		<div id='butAdd' class='round-button'><img src='addButton24px.svg'/></div>
     </div>
   </main>
+  
+  <menu type="context" id="menu">
+	<p><menuitem id="import">import</menuitem></p>
+	<p><menuitem id="export">export</menuitem></p>
+  </menu>
+  
+  <div id="importDialog" class="dialog-container">
+	<div class="dialog">
+		<div class="dialog-title">Load from saved file</div>
+		<div class="dialog-body">Imported data will replace any records you already have.</div>
+    		<div class="dialog-buttons">
+			<button id="buttonCancelImport" class="button">Cancel</button>
+			<input type="file" id="fileChooser">
+    		</div>
+	</div>
+  </div>
 
   <div id="addDialog" class="dialog-container">
     <div class="dialog">
@@ -71,7 +86,7 @@
       </div>
   </div>
   
-   <div id="keyDialog" class="dialog-container">
+  <div id="keyDialog" class="dialog-container">
   	<div class="dialog">
 		<div class="dialog-title">Key</div>
 		<div  class="dialog-body"><input type="password" id="keyText" size="6"/></div>
@@ -92,13 +107,6 @@
        		<button id="butCancelKey" class="button">Cancel</button>
 		 </div>
       </div>
-  </div>
-  
-  <div id="fileChooserDialog" class="dialog-container">
-  	<div class="dialog">
-      <div class="dialog-title">Load from saved file</div>
-	  <div class="dialog-body"><input type="file" id="fileChooser"></div>
-	</div>
   </div>
   
   <div class="loader">
