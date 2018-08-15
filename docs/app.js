@@ -29,8 +29,8 @@
 
 	// EVENT LISTENERS
 	document.getElementById("main").addEventListener('click', function() {
-  	document.getElementById("menu").style.display="none";
-  })
+  		document.getElementById("menu").style.display="none";
+	})
 	
 	document.getElementById("heading").addEventListener('click', function () { // HEADING
 		console.log("edit heading");
@@ -52,11 +52,8 @@
 	
 	document.getElementById('buttonMenu').addEventListener('click', function() { // MENU BUTTON
 		var display = document.getElementById("menu").style.display;
-		console.log("display: "+display);
 		if(display == "block") document.getElementById("menu").style.display = "none";
 		else document.getElementById("menu").style.display = "block";
-		console.log("display: "+display);
-		// document.getElementById("menu").style.display="block";
 	});
 	
 	document.getElementById("import").addEventListener('click', function() { // IMPORT OPTION
