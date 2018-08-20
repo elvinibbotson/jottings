@@ -47,6 +47,9 @@
 			app.toggleDialog("editDialog", true); // show section name in edit dialog
 			document.getElementById('text').value = app.listName;
 			console.log("app.jotting is " + app.jotting.text);
+			document.getElementById("order").disabled = false; // NEW
+			document.getElementById("order").checked = app.jotting.ordered; // NEW
+			document.getElementById("order").innerHTML = "ordered"; // NEW
 		}
 	});
 	
@@ -152,8 +155,15 @@
 	document.getElementById('butAdd').addEventListener('click', function () { // ADD BUTTON
 		// Open/show the add new jotting dialog
 		var type = document.getElementById('type');
-		if (app.path.length< 1) type.options.selectedIndex = 1;
-		else type.options.selectedIndex = 0;
+		if (app.path.length< 1) {
+			type.options.selectedIndex = 1;
+			document.getElementById("order").disabled = false;
+		}
+		else {
+			type.options.selectedIndex = 0;
+			document.getElementById("order").disabled = true;
+		}
+		document.getElementById("order").checked = false;
 		console.log("show add jotting diaog with blank text field");
 		app.toggleDialog('addDialog', true);
 		// document.getElementById('text').value="";
@@ -219,7 +229,11 @@
 		console.log("Save jotting: " + text);
 		if (app.jotting.secure) app.jotting.text = app.cryptify(text, app.keyCode); // encrypt if secure jotting
 		else app.jotting.text = text;
-		if (app.jotting.list) app.listName = text; // *********** PROBABLY NOT NEEDED ***********
+		if (app.jotting.list) {
+			app.listName = text; // *********** PROBABLY NOT NEEDED ***********
+			app.jotting.ordered = document.getElementById("order").checked;
+			console.log("ordered list: "+app.jotting.ordered);
+		}
 		// save amended jotting to indexedDB
 		var dbTransaction = app.db.transaction('jottings',"readwrite");
 		console.log("indexedDB transaction ready");
@@ -375,6 +389,9 @@
 			app.toggleDialog("editDialog", true);
 			if (app.jotting.secure> 0) document.getElementById("text").value = app.cryptify(app.jotting.text, app.keyCode); // decrypt secure jottings
 			else document.getElementById("text").value = app.jotting.text;
+			document.getElementById("order").disabled=true; // NEW
+			document.getElementById("order").checked=false; // NEW
+			document.getElementById("order").innerHTML = ""; // NEW
 		}
 		// jotting is a list
 		else if (app.locked == false || app.jotting.secure == false) {
@@ -394,6 +411,8 @@
 
 	// POPULATE JOTTINGS LIST
 	app.populateList = function () {
+		var ordered = false; // NEW - allow alpha-ordered lists
+		
 		//  build jottings list from children of listID
 		console.log("build jotting List for listID "+app.listID);
 		var dbTransaction = app.db.transaction('jottings', "readwrite");
@@ -407,8 +426,9 @@
 			request.onsuccess = function() {
 				jotting = event.target.result;
 				console.log("retrieved jotting "+jotting.text);
-				console.log("list "+jotting.text+"; list: "+jotting.list+"; secure: "+jotting.secure+"; parent: "+jotting.parent+"; content: "+jotting.content);
+				console.log("list "+jotting.text+"; list: "+jotting.list+"; secure: "+jotting.secure+"; ordered: "+jotting.ordered+"; parent: "+jotting.parent+"; content: "+jotting.content);
 				var t = jotting.text;
+				ordered = jotting.ordered;
 				if (jotting.secure> 0) t = app.cryptify(t, app.keyCode);
 				app.listName = t;
 			};
@@ -416,6 +436,7 @@
 		}
 		else app.listName="Jottings";		
 		app.jottings=[];
+		ordered = true; // NEW always order top-level list
 		var request = dbObjectStore.openCursor();
 		request.onsuccess = function (event) {
 			var cursor = event.target.result;
@@ -429,6 +450,11 @@
 			else {
 				console.log("No more entries! " + app.jottings.length + " jottings");
 				// jottings loaded - build list
+				
+				// NEW - ordered lists
+				if(ordered) app.jottings.sort(function(a,b){return(a.text>b.text)});
+				console.log("ordered is "+ordered);
+				
 				console.log("populate list for path " + app.path + " with " + app.jottings.length + " items");
 				document.getElementById("heading").innerHTML = app.listName;
 				app.list.innerHTML = ""; // clear list

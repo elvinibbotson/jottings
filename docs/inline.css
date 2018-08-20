@@ -42,15 +42,20 @@ body {
           align-content: stretch;
   background: "gray" }
   
-  select {
+select {
   	font-size: 1em;
 	font-weight: bold;
 	border-width: 0;
  }
  
- input {
+input {
  	height: 32px;
 	font-size: 1em;
+}
+
+#order {
+	width: 32px;
+	height: 32px;
 }
 
 #fileChooser {
