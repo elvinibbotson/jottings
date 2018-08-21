@@ -452,14 +452,14 @@
 				// jottings loaded - build list
 				
 				// NEW - ordered lists
-				report="list: ";
+				var report="list: ";
 				for (var i in app.jottings) {
 					report+=(app.jottings[i].text+"; ");
 				}
 				alert(report);
 				if(ordered) app.jottings.sort(function(a,b){return(a.text>b.text)});
 				console.log("ordered is "+ordered);
-				var report="ordered: "+ordered;
+				report="ordered: "+ordered;
 				console.log("populate list for path " + app.path + " with " + app.jottings.length + " items");
 				document.getElementById("heading").innerHTML = app.listName;
 				app.list.innerHTML = ""; // clear list
@@ -475,6 +475,7 @@
 					};
 					app.list.appendChild(listItem);
 				};
+				alert(report);
 			};
 		};
 	};
