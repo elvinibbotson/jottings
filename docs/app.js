@@ -450,15 +450,14 @@
 			else {
 				console.log("No more entries! " + app.jottings.length + " jottings");
 				// jottings loaded - build list
-				
 				// NEW - ordered lists
 				var report="list: ";
 				for (var i in app.jottings) {
 					report+=(app.jottings[i].text+"; ");
 				}
 				if(ordered) app.jottings.sort(function(a,b){
-    					if (a.text < b.text) return -1;
-    					if (a.text > b.text) return 1;
+    					if ((a.text < b.text) || a.secure) return -1;
+    					if ((a.text > b.text) && !a.secure) return 1;
     					return 0; 
 				});
 				console.log("ordered is "+ordered);
