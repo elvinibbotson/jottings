@@ -452,9 +452,14 @@
 				// jottings loaded - build list
 				
 				// NEW - ordered lists
+				report="list: ";
+				for (var i in app.jottings) {
+					report+=(app.jottings[i].text+"; ");
+				}
+				alert(report);
 				if(ordered) app.jottings.sort(function(a,b){return(a.text>b.text)});
 				console.log("ordered is "+ordered);
-				
+				var report="ordered: "+ordered;
 				console.log("populate list for path " + app.path + " with " + app.jottings.length + " items");
 				document.getElementById("heading").innerHTML = app.listName;
 				app.list.innerHTML = ""; // clear list
@@ -464,6 +469,7 @@
 					listItem.addEventListener('click', app.openItem, false);
 					if (app.jottings[i].secure> 0) listItem.textContent = app.cryptify(app.jottings[i].text, app.keyCode);
 					else listItem.textContent = app.jottings[i].text;
+					report+=("; "+app.jottings[i].text);
 					if (app.jottings[i].list) {
 						listItem.style.fontWeight = 'bold';
 					};
