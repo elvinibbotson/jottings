@@ -458,9 +458,8 @@
 				}
 				// alert(report);
 				if(ordered) app.jottings.sort(function(a,b){
-					var textA=a.text, text=b.text;
-    					if (textA < textB) return -1 
-    					if (textA > textB) return 1
+    					if (a.text < b.text) return -1 
+    					if (a.text > b.text) return 1
     					return 0 //default return value (no sorting)
 					// return(a.text>b.text)
 				});
