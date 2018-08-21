@@ -472,11 +472,11 @@
 					listItem.addEventListener('click', app.openItem, false);
 					if (app.jottings[i].secure> 0) listItem.textContent = app.cryptify(app.jottings[i].text, app.keyCode);
 					else listItem.textContent = app.jottings[i].text;
-					report+=("; "+app.jottings[i].text);
 					if (app.jottings[i].list) {
 						listItem.style.fontWeight = 'bold';
 					};
 					app.list.appendChild(listItem);
+					report+=("; "+app.jottings[i].text);
 				};
 				alert(report);
 			};
