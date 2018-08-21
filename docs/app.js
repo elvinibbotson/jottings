@@ -456,7 +456,7 @@
 				for (var i in app.jottings) {
 					report+=(app.jottings[i].text+"; ");
 				}
-				// alert(report);
+				/* alert(report);
 				if(ordered) app.jottings.sort(function(a,b){
     					if (a.text < b.text) return -1 
     					if (a.text > b.text) return 1
@@ -464,6 +464,7 @@
 					// return(a.text>b.text)
 				});
 				console.log("ordered is "+ordered);
+				*/
 				report+=("ordered: "+ordered);
 				console.log("populate list for path " + app.path + " with " + app.jottings.length + " items");
 				document.getElementById("heading").innerHTML = app.listName;
