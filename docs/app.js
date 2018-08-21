@@ -451,17 +451,17 @@
 				console.log("No more entries! " + app.jottings.length + " jottings");
 				// jottings loaded - build list
 				// NEW - ordered lists
-				var report="list: ";
+				/* var report="list: ";
 				for (var i in app.jottings) {
 					report+=(app.jottings[i].text+"; ");
-				}
+				} */
 				if(ordered) app.jottings.sort(function(a,b){
-    					if ((a.text < b.text) || a.secure) return -1;
-    					if ((a.text > b.text) && !a.secure) return 1;
+    					if ((a.text < b.text) && !a.secure) return -1;
+    					if ((a.text > b.text) || a.secure) return 1;
     					return 0; 
 				});
 				console.log("ordered is "+ordered);
-				report+=("ordered: "+ordered);
+				// report+=("ordered: "+ordered);
 				console.log("populate list for path " + app.path + " with " + app.jottings.length + " items");
 				document.getElementById("heading").innerHTML = app.listName;
 				app.list.innerHTML = ""; // clear list
@@ -474,11 +474,11 @@
 					if (app.jottings[i].list) {
 						listItem.style.fontWeight = 'bold';
 					};
-					listItem.style.color = (app.jottings[i].secure)?"yellow":"black";
+					listItem.style.color = (app.jottings[i].secure)?"gray":"black";
 					app.list.appendChild(listItem);
-					report+=("; "+app.jottings[i].text);
+					// report+=("; "+app.jottings[i].text);
 				};
-				alert(report);
+				// alert(report);
 			};
 		};
 	};
