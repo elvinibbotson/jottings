@@ -456,9 +456,9 @@
 					report+=(app.jottings[i].text+"; ");
 				} */
 				if(ordered) app.jottings.sort(function(a,b){
-					if (a.secure) return -1;
-					if (b.secure) return 1;
-    					if (a.text < b.text) return -1;
+					if (a.secure) return 1; // secure lists appear last
+					if (b.secure) return -1;
+    					if (a.text < b.text) return -1; // alpha sort
     					if (a.text > b.text) return 1;
     					return 0; 
 				});
