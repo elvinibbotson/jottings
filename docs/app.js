@@ -474,6 +474,7 @@
 					if (app.jottings[i].list) {
 						listItem.style.fontWeight = 'bold';
 					};
+					listItem.style.color = (app.jottings[i].secure)?"yellow":"black";
 					app.list.appendChild(listItem);
 					report+=("; "+app.jottings[i].text);
 				};
