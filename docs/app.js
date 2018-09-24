@@ -457,10 +457,16 @@
 					report+=(app.jottings[i].text+"; ");
 				} */
 				if(ordered) app.jottings.sort(function(a,b){
+					var textA=a.text;
+					if(a.secure) textA=app.cryptify(a.text,app.keyCode);
+					var textB=b.text;
+					if(b.secure) textB=app.cryptify(b.text,app.keyCode);
+					if(textA<textB) return -1;
+					if(textB<textA) return 1;
 					// if (a.secure) return 1; // secure lists appear last
 					// if (b.secure) return -1;
-    				if (a.text < b.text) return -1; // alpha sort
-    				if (a.text > b.text) return 1;
+    				// if (a.text < b.text) return -1; // alpha sort
+    				// if (a.text > b.text) return 1;
     				return 0; 
 				});
 				var report=("ordered is "+ordered);
