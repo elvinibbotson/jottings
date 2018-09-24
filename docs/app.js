@@ -412,7 +412,6 @@
 	// POPULATE JOTTINGS LIST
 	app.populateList = function () {
 		var ordered = false; // NEW - allow alpha-ordered lists
-		
 		//  build jottings list from children of listID
 		console.log("build jotting List for listID "+app.listID);
 		var dbTransaction = app.db.transaction('jottings', "readwrite");
@@ -434,9 +433,11 @@
 			};
 			request.onerror = function() {console.log("error retrieving jotting "+listID);}
 		}
-		else app.listName="Jottings";		
+		else {
+			app.listName="Jottings";
+			ordered = true; // NEW always order top-level list
+		}
 		app.jottings=[];
-		ordered = true; // NEW always order top-level list
 		var request = dbObjectStore.openCursor();
 		request.onsuccess = function (event) {
 			var cursor = event.target.result;
@@ -456,13 +457,13 @@
 					report+=(app.jottings[i].text+"; ");
 				} */
 				if(ordered) app.jottings.sort(function(a,b){
-					if (a.secure) return 1; // secure lists appear last
-					if (b.secure) return -1;
-    					if (a.text < b.text) return -1; // alpha sort
-    					if (a.text > b.text) return 1;
-    					return 0; 
+					// if (a.secure) return 1; // secure lists appear last
+					// if (b.secure) return -1;
+    				if (a.text < b.text) return -1; // alpha sort
+    				if (a.text > b.text) return 1;
+    				return 0; 
 				});
-				console.log("ordered is "+ordered);
+				alert("ordered is "+ordered);
 				// report+=("ordered: "+ordered);
 				console.log("populate list for path " + app.path + " with " + app.jottings.length + " items");
 				document.getElementById("heading").innerHTML = app.listName;
