@@ -461,7 +461,7 @@
 					if(a.secure) textA=app.cryptify(a.text,app.keyCode);
 					var textB=b.text;
 					if(b.secure) textB=app.cryptify(b.text,app.keyCode);
-					console.log("compare "textA+" & "+textB);
+					console.log("compare "+textA+" & "+textB);
 					if(textA<textB) return -1;
 					if(textB<textA) return 1;
 					// if (a.secure) return 1; // secure lists appear last
@@ -488,7 +488,7 @@
 					app.list.appendChild(listItem);
 					console.log(app.jottings[i].text);
 				};
-				alert(report);
+				// alert(report);
 			};
 		};
 	};
