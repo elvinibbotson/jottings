@@ -463,7 +463,7 @@
     				if (a.text > b.text) return 1;
     				return 0; 
 				});
-				alert("ordered is "+ordered);
+				report=("ordered is "+ordered);
 				// report+=("ordered: "+ordered);
 				console.log("populate list for path " + app.path + " with " + app.jottings.length + " items");
 				document.getElementById("heading").innerHTML = app.listName;
@@ -479,9 +479,9 @@
 					};
 					listItem.style.color = (app.jottings[i].secure)?"gray":"black";
 					app.list.appendChild(listItem);
-					// report+=("; "+app.jottings[i].text);
+					report+=("; "+app.jottings[i].text);
 				};
-				// alert(report);
+				alert(report);
 			};
 		};
 	};
