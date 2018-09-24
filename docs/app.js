@@ -461,6 +461,7 @@
 					if(a.secure) textA=app.cryptify(a.text,app.keyCode);
 					var textB=b.text;
 					if(b.secure) textB=app.cryptify(b.text,app.keyCode);
+					console.log("compare "textA+" & "+textB);
 					if(textA<textB) return -1;
 					if(textB<textA) return 1;
 					// if (a.secure) return 1; // secure lists appear last
@@ -469,7 +470,7 @@
     				// if (a.text > b.text) return 1;
     				return 0; 
 				});
-				var report=("ordered is "+ordered);
+				console.log("ordered is "+ordered);
 				// report+=("ordered: "+ordered);
 				console.log("populate list for path " + app.path + " with " + app.jottings.length + " items");
 				document.getElementById("heading").innerHTML = app.listName;
@@ -485,7 +486,7 @@
 					};
 					listItem.style.color = (app.jottings[i].secure)?"gray":"black";
 					app.list.appendChild(listItem);
-					report+=("; "+app.jottings[i].text);
+					console.log(app.jottings[i].text);
 				};
 				alert(report);
 			};
