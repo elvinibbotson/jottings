@@ -463,7 +463,7 @@
     				if (a.text > b.text) return 1;
     				return 0; 
 				});
-				report=("ordered is "+ordered);
+				var report=("ordered is "+ordered);
 				// report+=("ordered: "+ordered);
 				console.log("populate list for path " + app.path + " with " + app.jottings.length + " items");
 				document.getElementById("heading").innerHTML = app.listName;
