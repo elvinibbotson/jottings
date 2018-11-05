@@ -63,8 +63,10 @@ input {
 }
 
 button {
-	font-size: 1em;
-	margin-right: 10px;
+  height: 32px;
+	font-size: 1.5em;
+	vertical-align: bottom;
+	background-color: white;
 }
  
 .header {
