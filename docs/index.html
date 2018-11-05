@@ -15,8 +15,6 @@
 </head>
 <body>
 
-
-
   <header class="header">
   	<button id="buttonMenu" type="menu" menu="menu" class="headerButton" aria-label="Menu"></button>
 	<h1 id="heading" class="header__title">Jottings</h1>
@@ -55,7 +53,9 @@
 		<option value="list" selected>list</option>
 		<option value="secure">secure list</option>
 	</select></div>
-      <div class="dialog-body"><input type="text" id="newText" size="30"/></div>
+      <div class="dialog-body">
+        <textarea id='newText' rows='3' cols='30'></textarea>
+        <!--input type="text" id="newText" size="30"/--></div>
       <div class="dialog-buttons">
 	  <button id="butCancelNewJotting" class="button">Cancel</button>
       <button id="butAddNewJotting" class="button">Add</button>  
@@ -66,7 +66,9 @@
   <div id="editDialog" class="dialog-container">
   	<div class="dialog">
 		<div class="dialog-title">Edit</div>
-		<div  class="dialog-body"><input type="text" id="text" size="30"/><br>
+		<div  class="dialog-body">
+		  <textarea id='text' rows='3' cols='30'></textarea><br>
+		  <!--input type="text" id="text" size="30"/--><br>
 		<input type="checkbox" id="order">ordered</div>
 		<div class="dialog-buttons">
 			<button id="butDelete" class="deleteButton">Delete</button>
