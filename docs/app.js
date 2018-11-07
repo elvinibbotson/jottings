@@ -47,7 +47,8 @@
 			app.toggleDialog("editDialog", true); // show section name in edit dialog
 			document.getElementById('text').value = app.listName;
 			console.log("app.jotting is " + app.jotting.text);
-			document.getElementById("order").disabled = false; // NEW
+			document.getElementById('ordered').style.display='block';
+			// document.getElementById("order").disabled = false; // NEW
 			document.getElementById("order").checked = app.jotting.ordered; // NEW
 			document.getElementById("order").innerHTML = "ordered"; // NEW
 		}
@@ -157,11 +158,13 @@
 		var type = document.getElementById('type');
 		if (app.path.length< 1) {
 			type.options.selectedIndex = 1;
-			document.getElementById("order").disabled = false;
+			document.getElementById("ordered").style.display='block';
+			// document.getElementById("order").disabled = false;
 		}
 		else {
 			type.options.selectedIndex = 0;
-			document.getElementById("order").disabled = true;
+			document.getElementById("ordered").style.display='none';
+			// document.getElementById("order").disabled = true;
 		}
 		document.getElementById("order").checked = false;
 		console.log("show add jotting diaog with blank text field");
@@ -389,7 +392,8 @@
 			app.toggleDialog("editDialog", true);
 			if (app.jotting.secure> 0) document.getElementById("text").value = app.cryptify(app.jotting.text, app.keyCode); // decrypt secure jottings
 			else document.getElementById("text").value = app.jotting.text;
-			document.getElementById("order").disabled=true; // NEW
+			document.getElementById("ordered").style.display='none';
+			// document.getElementById("order").disabled=true; // NEW
 			document.getElementById("order").checked=false; // NEW
 			document.getElementById("order").innerHTML = ""; // NEW
 		}

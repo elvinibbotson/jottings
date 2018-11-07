@@ -51,6 +51,8 @@ select {
 input {
  	height: 32px;
 	font-size: 1em;
+	background-color: white;
+	border: 1px solid gray;
 }
 
 #order {
