@@ -15,7 +15,7 @@
 	}
   ],
   "start_url": "/Jottings/",
-  "display": "fullscreen",
-  "background_color": "#00000000",
-  "theme_color": "#00000000"
+  "display": "standalone",
+  "background_color": "#333333",
+  "theme_color": "#333333"
 }
