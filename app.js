@@ -511,11 +511,11 @@
 	var request = window.indexedDB.open("jottingsDB");
 	request.onsuccess = function (event) {
 		app.db = event.target.result;
-		alert("DB open");
+		console.log("DB open");
 		var dbTransaction = app.db.transaction('jottings', "readwrite");
-		alert("indexedDB transaction ready");
+		console.log("indexedDB transaction ready");
 		var dbObjectStore = dbTransaction.objectStore('jottings');
-		alert("indexedDB objectStore ready");
+		console.log("indexedDB objectStore ready");
 		app.jottings = [];
 		console.log("jottings array ready");
 		var request = dbObjectStore.openCursor();
