@@ -1,12 +1,9 @@
 (function () {
 	'use strict';
 
-	// GLOBAL VARIABLES
+// GLOBAL VARIABLES
 	var app = {
 		db: null,
-		isLoading: true,
-		spinner: document.querySelector('.loader'),
-		container: document.querySelector('.main'),
 		addDialog: document.getElementById('addDialog'),
 		editDialog: document.getElementById('editDialog'),
 		deleteDialog: document.getElementById('deleteDialog'),
@@ -27,12 +24,13 @@
 		months: "JanFebMarAprMayJunJulAugSepOctNovDec"
 	};
 
-	// EVENT LISTENERS
+// EVENT LISTENERS
 	document.getElementById("main").addEventListener('click', function() {
   		document.getElementById("menu").style.display="none";
 	})
-	
-	document.getElementById("heading").addEventListener('click', function () { // HEADING
+
+// HEADING
+	document.getElementById("heading").addEventListener('click', function () {
 		console.log("edit heading");
 		if (app.path.length> 0) { // can edit list names
 			document.getElementById('butDelete').disabled = false;
@@ -47,96 +45,11 @@
 			app.toggleDialog("editDialog", true); // show section name in edit dialog
 			document.getElementById('text').value = app.listName;
 			console.log("app.jotting is " + app.jotting.text);
-			document.getElementById('ordered').style.display='block';
-			// document.getElementById("order").disabled = false; // NEW
+			document.getElementById("order").disabled = false; // NEW
 			document.getElementById("order").checked = app.jotting.ordered; // NEW
 			document.getElementById("order").innerHTML = "ordered"; // NEW
 		}
-	});
-	
-	document.getElementById('buttonMenu').addEventListener('click', function() { // MENU BUTTON
-		var display = document.getElementById("menu").style.display;
-		if(display == "block") document.getElementById("menu").style.display = "none";
-		else document.getElementById("menu").style.display = "block";
-	});
-	
-	document.getElementById("import").addEventListener('click', function() { // IMPORT OPTION
-  		console.log("IMPORT");
-		app.toggleDialog("importDialog", true);
-	})
-	
-	document.getElementById('buttonCancelImport').addEventListener('click', function() { // CANCEL IMPORT DATA
-    app.toggleDialog('importDialog', false);
-	document.getElementById("menu").style.display="none";
-  });
-
-	app.fileChooser.addEventListener('change', function() { // IMPORT FILE
-		var file = app.fileChooser.files[0];
-		console.log("file: "+file+" name: "+file.name);
-	  	var fileReader=new FileReader();
-	  	fileReader.addEventListener('load', function(evt) {
-			console.log("file read: "+evt.target.result);
-	  		var data=evt.target.result;
-			var json=JSON.parse(data);
-			console.log("json: "+json);
-			var jottings=json.jottings;
-			console.log(jottings.length+" jottings loaded");
-			var dbTransaction = app.db.transaction('jottings',"readwrite");
-			var dbObjectStore = dbTransaction.objectStore('jottings');
-			for(var i=0;i<jottings.length;i++) {
-				console.log("add "+jottings[i].id+": "+jottings[i].text+" parent: "+jottings[i].parent);
-				var request = dbObjectStore.add(jottings[i]);
-				request.onsuccess = function(e) {
-					console.log(jottings.length+" jottings added to database");
-				};
-				request.onerror = function(e) {console.log("error adding jotting");};
-			};
-			app.toggleDialog('importDialog',false);
-			alert("jottings imported - restart");
-	  	});
-	  	fileReader.readAsText(file);
-  	},false);
-	
-  document.getElementById("export").addEventListener('click', function() { // EXPORT FILE
-  	console.log("EXPORT");
-	var today= new Date();
-	var fileName = "jottings" + today.getDate();
-	var n = today.getMonth();
-	fileName += app.months.substr(n*3,3);
-	var n = today.getFullYear() % 100;
-	if(n<10) fileName+="0";
-	fileName += n + ".json";
-	var dbTransaction = app.db.transaction('jottings',"readwrite");
-	console.log("indexedDB transaction ready");
-	var dbObjectStore = dbTransaction.objectStore('jottings');
-	console.log("indexedDB objectStore ready");
-	var request = dbObjectStore.openCursor();
-	var jottings=[];
-	request.onsuccess = function(event) {  
-		var cursor = event.target.result;  
-    		if (cursor) {
-			jottings.push(cursor.value);
-			console.log("jotting "+cursor.key+", id: "+cursor.value.id+", "+cursor.value.text);
-			cursor.continue();  
-    		}
-		else {
-			console.log(jottings.length+" jottings to save");
-			var data={'jottings': jottings};
-			var json=JSON.stringify(data);
-			var blob = new Blob([json], {type:"data:application/json"});
-  			var a = document.createElement('a');
-			a.style.display = 'none';
-    			var url = window.URL.createObjectURL(blob);
-			console.log("data ready to save: "+blob.size+" bytes");
-   			a.href = url;
-   			a.download = fileName;
-    			document.body.appendChild(a);
-    			a.click();
-			alert(fileName+" saved to downloads folder");
-			document.getElementById("menu").style.display="none";
-		}
-	}
-  })
+});
 
 	document.getElementById('butBack').addEventListener('click', function () { // BACK BUTTON
 		// back up a level
@@ -158,13 +71,11 @@
 		var type = document.getElementById('type');
 		if (app.path.length< 1) {
 			type.options.selectedIndex = 1;
-			document.getElementById("ordered").style.display='block';
-			// document.getElementById("order").disabled = false;
+			document.getElementById("order").disabled = false;
 		}
 		else {
 			type.options.selectedIndex = 0;
-			document.getElementById("ordered").style.display='none';
-			// document.getElementById("order").disabled = true;
+			document.getElementById("order").disabled = true;
 		}
 		document.getElementById("order").checked = false;
 		console.log("show add jotting diaog with blank text field");
@@ -290,15 +201,15 @@
 	});
 
 	document.getElementById('butSaveKey').addEventListener('click', function () { // SAVE NEW SECURITY KEY
-		var key = document.getElementById('newKeyText').value;
-		var confirm = document.getElementById('confirmKeyText').value;
-		if (key == confirm) { // save new key and unlock
+		var key=document.getElementById('newKeyText').value;
+		var confirm=document.getElementById('confirmKeyText').value;
+		if (key==confirm) { // save new key and unlock
 			console.log("save new key " + key + " and unlock");
-			app.key = key;
-			key = app.cryptify(key, 'jottings');
-			console.log("store ecncrypted key " + key);
-			localStorage.keyCode = key;
-			app.locked = false;
+			app.key=key;
+			key=app.cryptify(key, 'jottings');
+			console.log("store ecncrypted key "+key);
+			localStorage.keyCode=key;
+			app.locked=false;
 		}
 		else console.log("MISMATCH");
 		app.toggleDialog('newKeyDialog', false); // Close the new key dialog
@@ -309,8 +220,8 @@
 	});
 
 	document.getElementById("butUnlock").addEventListener('click', function () { // UNLOCK SECURE LIST
-		var key = document.getElementById('keyText').value;
-		if (key == app.keyCode) app.locked = false;
+		var key=document.getElementById('keyText').value;
+		if (key==app.keyCode) app.locked=false;
 		app.toggleDialog('keyDialog', false);
 	});
 
@@ -318,8 +229,8 @@
 		app.toggleDialog('keyDialog', false); // close key dialog
 	});
 
-	// SHOW/HIDE DIALOGS
-	app.toggleDialog = function (d, visible) {
+// SHOW/HIDE DIALOGS
+app.toggleDialog = function (d, visible) {
 		if (visible) console.log("show " + d);
 		else console.log("hide " + d);
 		if (d == 'addDialog') { // toggle ADD dialog
@@ -367,8 +278,8 @@
 	  }
 	};
 
-	// OPEN JOTTING/LIST
-	app.openItem = function () {		
+// OPEN JOTTING/LIST
+app.openItem = function () {		
 		var item = event.target;
 		event.preventDefault();
 		var text = item.textContent;
@@ -392,8 +303,7 @@
 			app.toggleDialog("editDialog", true);
 			if (app.jotting.secure> 0) document.getElementById("text").value = app.cryptify(app.jotting.text, app.keyCode); // decrypt secure jottings
 			else document.getElementById("text").value = app.jotting.text;
-			document.getElementById("ordered").style.display='none';
-			// document.getElementById("order").disabled=true; // NEW
+			document.getElementById("order").disabled=true; // NEW
 			document.getElementById("order").checked=false; // NEW
 			document.getElementById("order").innerHTML = ""; // NEW
 		}
@@ -413,17 +323,17 @@
 		}
 	};
 
-	// POPULATE JOTTINGS LIST
-	app.populateList = function () {
+// POPULATE JOTTINGS LIST
+app.populateList = function () {
 		var ordered = false; // NEW - allow alpha-ordered lists
 		//  build jottings list from children of listID
 		console.log("build jotting List for listID "+app.listID);
-		var dbTransaction = app.db.transaction('jottings', "readwrite");
+		var dbTransaction=app.db.transaction('jottings', "readwrite");
 		console.log("indexedDB transaction ready");
-		var dbObjectStore = dbTransaction.objectStore('jottings');
+		var dbObjectStore=dbTransaction.objectStore('jottings');
 		console.log("indexedDB objectStore ready");
 		var jotting={};
-		if(app.listID != null) {
+		if(app.listID!=null) {
 			console.log("get list item "+app.listID);
 			var request = dbObjectStore.get(app.listID);
 			request.onsuccess = function() {
@@ -431,22 +341,20 @@
 				console.log("retrieved jotting "+jotting.text);
 				console.log("list "+jotting.text+"; list: "+jotting.list+"; secure: "+jotting.secure+"; ordered: "+jotting.ordered+"; parent: "+jotting.parent+"; content: "+jotting.content);
 				var t = jotting.text;
-				ordered = jotting.ordered;
-				if (jotting.secure> 0) t = app.cryptify(t, app.keyCode);
-				app.listName = t;
+				ordered=jotting.ordered;
+				if (jotting.secure> 0) t=app.cryptify(t, app.keyCode);
+				app.listName=t;
 			};
 			request.onerror = function() {console.log("error retrieving jotting "+listID);}
 		}
-		else {
-			app.listName="Jottings";
-			ordered = true; // NEW always order top-level list
-		}
+		else app.listName="Jottings";		
 		app.jottings=[];
-		var request = dbObjectStore.openCursor();
-		request.onsuccess = function (event) {
-			var cursor = event.target.result;
+		ordered=true; // NEW always order top-level list
+		request=dbObjectStore.openCursor();
+		request.onsuccess=function (event) {
+			var cursor=event.target.result;
 			if (cursor) {
-				if(cursor.value.parent == app.listID) {
+				if(cursor.value.parent==app.listID) {
 					app.jottings.push(cursor.value);
 					console.log("jotting id: " + cursor.value.id + "; " + cursor.value.text + "; list: " + cursor.value.list + "; secure: " + cursor.value.secure + "; parent: " + cursor.value.parent + "; content: " + cursor.value.content);
 				}
@@ -454,25 +362,22 @@
 			}
 			else {
 				console.log("No more entries! " + app.jottings.length + " jottings");
+				if(app.jottings.length<1) { // no data: restore backup?
+				    console.log("no data - restore backup?");
+				    document.getElementById('importDialog').style.display='block';
+				}
+				else { // monthly backups
+				    var today=new Date();
+				    console.log('this month: '+today.getMonth()+"; last save: "+app.lastSave);
+				    if(today.getMonth()!=app.lastSave) app.backup();
+				}
 				// jottings loaded - build list
-				// NEW - ordered lists
-				/* var report="list: ";
-				for (var i in app.jottings) {
-					report+=(app.jottings[i].text+"; ");
-				} */
 				if(ordered) app.jottings.sort(function(a,b){
-					var textA=a.text;
-					if(a.secure) textA=app.cryptify(a.text,app.keyCode);
-					var textB=b.text;
-					if(b.secure) textB=app.cryptify(b.text,app.keyCode);
-					console.log("compare "+textA+" & "+textB);
-					if(textA<textB) return -1;
-					if(textB<textA) return 1;
-					// if (a.secure) return 1; // secure lists appear last
-					// if (b.secure) return -1;
-    				// if (a.text < b.text) return -1; // alpha sort
-    				// if (a.text > b.text) return 1;
-    				return 0; 
+					if (a.secure) return 1; // secure lists appear last
+					if (b.secure) return -1;
+    					if (a.text < b.text) return -1; // alpha sort
+    					if (a.text > b.text) return 1;
+    					return 0; 
 				});
 				console.log("ordered is "+ordered);
 				// report+=("ordered: "+ordered);
@@ -487,42 +392,116 @@
 					else listItem.textContent = app.jottings[i].text;
 					if (app.jottings[i].list) {
 						listItem.style.fontWeight = 'bold';
-					};
+					}
 					listItem.style.color = (app.jottings[i].secure)?"gray":"black";
 					app.list.appendChild(listItem);
-					console.log(app.jottings[i].text);
-				};
+					// report+=("; "+app.jottings[i].text);
+				}
 				// alert(report);
-			};
+			}
 		};
 	};
 
-	// ENCRYPT/DECRYPT TEXT USING KEY
-	app.cryptify = function (value, key) {
-		var i = 0;
-		var result = "";
-		// console.log("cryptify "+value+" using key "+key);
-		var k;
-		var v;
-		for (i = 0; i< value.length; i++) {
-			k = key.charCodeAt(i % key.length);
-			v = value.charCodeAt(i);
-			// console.log("key["+i+"]: "+k+"; value["+i+"]: "+v);
-			result += String.fromCharCode(k ^ v);
-			// console.log("result: "+result);
-		}
-		return result;
-	};
+// ENCRYPT/DECRYPT TEXT USING KEY
+app.cryptify=function(value,key) {
+	var i=0;
+	var result="";
+	// console.log("cryptify "+value+" using key "+key);
+	var k;
+	var v;
+	for (i=0;i<value.length;i++) {
+		k=key.charCodeAt(i%key.length);
+		v=value.charCodeAt(i);
+		// console.log("key["+i+"]: "+k+"; value["+i+"]: "+v);
+		result+=String.fromCharCode(k ^ v);
+		// console.log("result: "+result);
+	}
+	return result;
+};
 
-	// START-UP CODE
-	app.keyCode = window.localStorage.keyCode; // load any saved key
-	console.log("saved key is " + app.keyCode);
-	if (app.keyCode != null) app.keyCode = app.cryptify(app.keyCode, 'jottings'); // saved key was encrypted
-	console.log("keyCode: " + app.keyCode);
+// RESTORE BACKUP
+app.fileChooser.addEventListener('change', function() { // IMPORT FILE
+	var file = app.fileChooser.files[0];
+	console.log("file: "+file+" name: "+file.name);
+	var fileReader=new FileReader();
+	fileReader.addEventListener('load', function(evt) {
+		console.log("file read: "+evt.target.result);
+	  	var data=evt.target.result;
+		var json=JSON.parse(data);
+		console.log("json: "+json);
+		var jottings=json.jottings;
+		console.log(jottings.length+" jottings loaded");
+		var dbTransaction=app.db.transaction('jottings',"readwrite");
+		var dbObjectStore=dbTransaction.objectStore('jottings');
+		for(var i=0;i<jottings.length;i++) {
+			console.log("add "+jottings[i].id+": "+jottings[i].text+" parent: "+jottings[i].parent);
+			var request=dbObjectStore.add(jottings[i]);
+			request.onsuccess = function(e) {
+				console.log(jottings.length+" jottings added to database");
+			};
+			request.onerror = function(e) {console.log("error adding jotting");};
+		};
+		document.getElementById('importDialog').style.display='none';
+		alert("jottings imported - restart");
+	});
+	fileReader.readAsText(file);
+});
+	
+// CANCEL RESTORE
+	document.getElementById('buttonCancelImport').addEventListener('click', function() { // CANCEL IMPORT DATA
+    app.toggleDialog('importDialog', false);
+	document.getElementById("importDialog").style.display="none";
+  });
+
+// BACKUP
+app.backup=function() {
+  	console.log("EXPORT");
+	var fileName = "jottings.json";
+	var dbTransaction=app.db.transaction('jottings',"readwrite");
+	console.log("indexedDB transaction ready");
+	var dbObjectStore=dbTransaction.objectStore('jottings');
+	console.log("indexedDB objectStore ready");
+	var request=dbObjectStore.openCursor();
+	var jottings=[];
+	request.onsuccess=function(event) {  
+		var cursor=event.target.result;  
+    	if(cursor) {
+		    jottings.push(cursor.value);
+			console.log("jotting "+cursor.key+", id: "+cursor.value.id+", "+cursor.value.text);
+			cursor.continue();  
+    	}
+		else {
+			console.log(jottings.length+" jottings to save");
+			var data={'jottings': jottings};
+			var json=JSON.stringify(data);
+			var blob=new Blob([json], {type:"data:application/json"});
+  			var a=document.createElement('a');
+			a.style.display='none';
+    		var url=window.URL.createObjectURL(blob);
+			console.log("data ready to save: "+blob.size+" bytes");
+   			a.href=url;
+   			a.download=fileName;
+    		document.body.appendChild(a);
+    		a.click();
+			alert(fileName+" saved to downloads folder");
+			var today=new Date();
+			app.lastSave=today.getMonth();
+			window.localStorage.setItem('lastSave',app.lastSave);
+		}
+	}
+}
+
+// START-UP CODE
+    app.lastSave=window.localStorage.getItem('lastSave');
+	console.log("last save: "+app.lastSave);
+	app.keyCode=window.localStorage.keyCode; // load any saved key
+	console.log("saved key is "+app.keyCode);
+	if (app.keyCode != null) app.keyCode=app.cryptify(app.keyCode, 'jottings'); // saved key was encrypted
+	console.log("keyCode: "+app.keyCode);
 	// load jottings from database
-	var request = window.indexedDB.open("jottingsDB");
-	request.onsuccess = function (event) {
-		app.db = event.target.result;
+	var request=window.indexedDB.open("jottingsDB");
+	request.onsuccess=function (event) {
+		app.db=event.target.result;
 		console.log("DB open");
 		var dbTransaction = app.db.transaction('jottings', "readwrite");
 		console.log("indexedDB transaction ready");
@@ -532,14 +511,8 @@
 		console.log("jottings array ready");
 		var request = dbObjectStore.openCursor();
 		request.onsuccess = function (event) {
-		app.listID = null;
-			// app.listName = "Jottings";
-			app.populateList();
-			if (app.isLoading) { // hide loading spinner
-				app.spinner.setAttribute('hidden', true);
-				app.container.removeAttribute('hidden');
-				app.isLoading = false;
-			}
+		    app.listID = null;
+		    app.populateList();
 		};
 	};
 	request.onupgradeneeded = function (event) {
