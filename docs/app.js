@@ -25,9 +25,6 @@
 	};
 
 // EVENT LISTENERS
-	document.getElementById("main").addEventListener('click', function() {
-  		document.getElementById("menu").style.display="none";
-	})
 
 // HEADING
 	document.getElementById("heading").addEventListener('click', function () {
@@ -51,7 +48,8 @@
 		}
 });
 
-	document.getElementById('butBack').addEventListener('click', function () { // BACK BUTTON
+// BACK BUTTON
+	document.getElementById('butBack').addEventListener('click', function () {
 		// back up a level
 		console.log("BACK");
 		app.path.pop();
@@ -63,10 +61,11 @@
 			document.getElementById("butBack").style.display="none";
 		}
 		app.populateList();
-		
-	});
+	})
 
-	document.getElementById('butAdd').addEventListener('click', function () { // ADD BUTTON
+
+// ADD BUTTON
+	document.getElementById('butAdd').addEventListener('click', function () {
 		// Open/show the add new jotting dialog
 		var type = document.getElementById('type');
 		if (app.path.length< 1) {
@@ -83,7 +82,8 @@
 		// document.getElementById('text').value="";
 	});
 
-	document.getElementById('butAddNewJotting').addEventListener('click', function () { // NEW JOTTING/LIST
+// NEW JOTTING/LIST
+	document.getElementById('butAddNewJotting').addEventListener('click', function () {
 		// Add the new jotting
 		var textBox = document.getElementById('newText');
 		var jottingName = textBox.value;
@@ -124,11 +124,13 @@
 		request.onerror = function(event) {console.log("error adding new jotting");};
 	});
 
-	document.getElementById('butCancelNewJotting').addEventListener('click', function () { // CANCEL NEW JOTTING
+// CANCEL NEW JOTTING
+	document.getElementById('butCancelNewJotting').addEventListener('click', function () {
 		app.toggleDialog('addDialog', false); // just close the add new jotting dialog
 	});
 
-	document.getElementById('butDelete').addEventListener('click', function () { // DELETE JOTTING/LIST
+// DELETE JOTTING/LIST
+	document.getElementById('butDelete').addEventListener('click', function () {
 		var text = app.jotting.text; // initiate delete jotting/list
 		console.log("delete jotting " + text);
 		if (app.jotting.secure> 0) text = app.cryptify(text, app.keyCode);
@@ -137,7 +139,8 @@
 		app.toggleDialog("editDialog", false);
 	});
 
-	document.getElementById('butSave').addEventListener('click', function () { // SAVE JOTTING AFTER EDIT
+// SAVE JOTTING AFTER EDIT
+	document.getElementById('butSave').addEventListener('click', function () {
 		var text = document.getElementById("text").value; // Save edited jotting
 		app.toggleDialog('editDialog', false);
 		console.log("Save jotting: " + text);
@@ -161,11 +164,13 @@
 		request.onerror = function(event) {console.log("error updating jotting "+app.jotting.id);};
 	});
 
-	document.getElementById('butCancelEdit').addEventListener('click', function () { // CANCEL EDIT
+// CANCEL EDIT
+	document.getElementById('butCancelEdit').addEventListener('click', function () {
 		app.toggleDialog('editDialog', false); // close the edit jotting dialog
 	});
 
-	document.getElementById('butDeleteConfirm').addEventListener('click', function () { // CONFIRM DELETE
+// CONFIRM DELETE
+	document.getElementById('butDeleteConfirm').addEventListener('click', function () {
 		console.log("delete " + app.jotting.text); // confirm delete jotting/list
 		if (app.jottings.length< 1) { // delete empty list (below top level) so...
 			console.log("path length: " + app.path.length);
@@ -196,11 +201,13 @@
 		app.toggleDialog('deleteDialog', false);
 	});
 
-	document.getElementById('butCancelDelete').addEventListener('click', function () { // CANCEL DELETE
+// CANCEL DELETE
+	document.getElementById('butCancelDelete').addEventListener('click', function () {
 		app.toggleDialog('deleteDialog', false); // close delete dialog
 	});
 
-	document.getElementById('butSaveKey').addEventListener('click', function () { // SAVE NEW SECURITY KEY
+// SAVE NEW SECURITY KEY
+	document.getElementById('butSaveKey').addEventListener('click', function () {
 		var key=document.getElementById('newKeyText').value;
 		var confirm=document.getElementById('confirmKeyText').value;
 		if (key==confirm) { // save new key and unlock
@@ -215,17 +222,20 @@
 		app.toggleDialog('newKeyDialog', false); // Close the new key dialog
 	});
 
-	document.getElementById('butCancelKey').addEventListener('click', function () { // CANCEL NEW KEY
+// CANCEL NEW KEY
+	document.getElementById('butCancelKey').addEventListener('click', function () {
 		app.toggleDialog('newKeyDialog', false); // close new key dialog
 	});
 
-	document.getElementById("butUnlock").addEventListener('click', function () { // UNLOCK SECURE LIST
+// UNLOCK SECURE LIST
+	document.getElementById("butUnlock").addEventListener('click', function () {
 		var key=document.getElementById('keyText').value;
 		if (key==app.keyCode) app.locked=false;
 		app.toggleDialog('keyDialog', false);
 	});
 
-	document.getElementById("butCancelUnlock").addEventListener('click', function () { // CANCEL UNLOCK
+// CANCEL UNLOCK
+	document.getElementById("butCancelUnlock").addEventListener('click', function () {
 		app.toggleDialog('keyDialog', false); // close key dialog
 	});
 
@@ -328,21 +338,21 @@ app.populateList = function () {
 		var ordered = false; // NEW - allow alpha-ordered lists
 		//  build jottings list from children of listID
 		console.log("build jotting List for listID "+app.listID);
-		var dbTransaction=app.db.transaction('jottings', "readwrite");
+		var dbTransaction=app.db.transaction('jottings',"readwrite");
 		console.log("indexedDB transaction ready");
 		var dbObjectStore=dbTransaction.objectStore('jottings');
 		console.log("indexedDB objectStore ready");
 		var jotting={};
 		if(app.listID!=null) {
 			console.log("get list item "+app.listID);
-			var request = dbObjectStore.get(app.listID);
-			request.onsuccess = function() {
-				jotting = event.target.result;
+			var request=dbObjectStore.get(app.listID);
+			request.onsuccess=function() {
+				jotting=event.target.result;
 				console.log("retrieved jotting "+jotting.text);
 				console.log("list "+jotting.text+"; list: "+jotting.list+"; secure: "+jotting.secure+"; ordered: "+jotting.ordered+"; parent: "+jotting.parent+"; content: "+jotting.content);
-				var t = jotting.text;
+				var t=jotting.text;
 				ordered=jotting.ordered;
-				if (jotting.secure> 0) t=app.cryptify(t, app.keyCode);
+				if(jotting.secure> 0) t=app.cryptify(t, app.keyCode);
 				app.listName=t;
 			};
 			request.onerror = function() {console.log("error retrieving jotting "+listID);}
@@ -353,7 +363,7 @@ app.populateList = function () {
 		request=dbObjectStore.openCursor();
 		request.onsuccess=function (event) {
 			var cursor=event.target.result;
-			if (cursor) {
+			if(cursor) {
 				if(cursor.value.parent==app.listID) {
 					app.jottings.push(cursor.value);
 					console.log("jotting id: " + cursor.value.id + "; " + cursor.value.text + "; list: " + cursor.value.list + "; secure: " + cursor.value.secure + "; parent: " + cursor.value.parent + "; content: " + cursor.value.content);
@@ -361,29 +371,31 @@ app.populateList = function () {
 				cursor.continue ();
 			}
 			else {
-				console.log("No more entries! " + app.jottings.length + " jottings");
-				if(app.jottings.length<1) { // no data: restore backup?
-				    console.log("no data - restore backup?");
-				    document.getElementById('importDialog').style.display='block';
-				}
-				else { // monthly backups
-				    var today=new Date();
-				    console.log('this month: '+today.getMonth()+"; last save: "+app.lastSave);
-				    if(today.getMonth()!=app.lastSave) app.backup();
+				console.log("No more entries! "+app.jottings.length+" jottings");
+				if(app.listID==null) { // backup checks
+				    if(app.jottings.length<1) { // no data: restore backup?
+				        console.log("no data - restore backup?");
+				        document.getElementById('importDialog').style.display='block';
+				    }
+				    else { // monthly backups
+				        var today=new Date();
+				        console.log('this month: '+today.getMonth()+"; last save: "+app.lastSave);
+				        if(today.getMonth()!=app.lastSave) app.backup();
+				    }
 				}
 				// jottings loaded - build list
 				if(ordered) app.jottings.sort(function(a,b){
-					if (a.secure) return 1; // secure lists appear last
-					if (b.secure) return -1;
-    					if (a.text < b.text) return -1; // alpha sort
-    					if (a.text > b.text) return 1;
+					if(a.secure) return 1; // secure lists appear last
+					if(b.secure) return -1;
+    					if(a.text < b.text) return -1; // alpha sort
+    					if(a.text > b.text) return 1;
     					return 0; 
 				});
 				console.log("ordered is "+ordered);
 				// report+=("ordered: "+ordered);
 				console.log("populate list for path " + app.path + " with " + app.jottings.length + " items");
 				document.getElementById("heading").innerHTML = app.listName;
-				app.list.innerHTML = ""; // clear list
+				app.list.innerHTML=""; // clear list
 				for (var i in app.jottings) {
 					var listItem = document.createElement('li');
 					listItem.classList.add('item');
@@ -391,9 +403,9 @@ app.populateList = function () {
 					if (app.jottings[i].secure> 0) listItem.textContent = app.cryptify(app.jottings[i].text, app.keyCode);
 					else listItem.textContent = app.jottings[i].text;
 					if (app.jottings[i].list) {
-						listItem.style.fontWeight = 'bold';
+						listItem.style.fontWeight='bold';
 					}
-					listItem.style.color = (app.jottings[i].secure)?"gray":"black";
+					// listItem.style.color=(app.jottings[i].secure)?"red":"black";
 					app.list.appendChild(listItem);
 					// report+=("; "+app.jottings[i].text);
 				}
@@ -507,11 +519,11 @@ app.backup=function() {
 		console.log("indexedDB transaction ready");
 		var dbObjectStore = dbTransaction.objectStore('jottings');
 		console.log("indexedDB objectStore ready");
-		app.jottings = [];
+		app.jottings=[];
 		console.log("jottings array ready");
 		var request = dbObjectStore.openCursor();
 		request.onsuccess = function (event) {
-		    app.listID = null;
+		    app.listID=null;
 		    app.populateList();
 		};
 	};
