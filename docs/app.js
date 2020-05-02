@@ -371,7 +371,7 @@ app.populateList = function () {
 				cursor.continue ();
 			}
 			else {
-				console.log("No more entries! "+app.jottings.length+" jottings");
+				alert("No more entries! "+app.jottings.length+" jottings");
 				if(app.listID==null) { // backup checks
 				    if(app.jottings.length<1) { // no data: restore backup?
 				        console.log("no data - restore backup?");
