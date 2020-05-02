@@ -85,25 +85,25 @@
 // NEW JOTTING/LIST
 	document.getElementById('butAddNewJotting').addEventListener('click', function () {
 		// Add the new jotting
-		var textBox = document.getElementById('newText');
-		var jottingName = textBox.value;
+		var textBox=document.getElementById('newText');
+		var jottingName=textBox.value;
 		// create new (empty) jotting and show it for content to be added
-		var jotting = {};
-		var type = document.getElementById('type').options.selectedIndex;
+		var jotting={};
+		var type=document.getElementById('type').options.selectedIndex;
 		console.log("selected type: " + type);
-		jotting.parent = app.listID;
-		if (type> 0) jotting.list =  true; // jotting.content = [];
-		if ((type< 2) && (app.secure == false)) {
-			jotting.secure = false;
-			jotting.text = jottingName;
+		jotting.parent=app.listID;
+		if(type>0) jotting.list=true; // jotting.content = [];
+		if((type<2) && (app.secure===false)) {
+			jotting.secure=false;
+			jotting.text=jottingName;
 		}
-		else if (app.keyCode != null) {
-			app.secure = true;
-			jotting.secure = true; // secure lists have 'secure' property
-			jotting.text = app.cryptify(jottingName, app.keyCode);
+		else if(app.keyCode!==null) {
+			app.secure=true;
+			jotting.secure=true; // secure lists have 'secure' property
+			jotting.text=app.cryptify(jottingName, app.keyCode);
 		}
 		else { // not yet unlocked
-			if (app.keyCode == null) app.toggleDialog('newKeyDialog', true); // set key for first time
+			if(app.keyCode===null) app.toggleDialog('newKeyDialog', true); // set key for first time
 			else app.toggleDialog("keyDialog", true); // unlock by entering key
 			app.toggleDialog('addDialog', false);
 			return ;
@@ -141,27 +141,27 @@
 
 // SAVE JOTTING AFTER EDIT
 	document.getElementById('butSave').addEventListener('click', function () {
-		var text = document.getElementById("text").value; // Save edited jotting
+		var text=document.getElementById("text").value; // Save edited jotting
 		app.toggleDialog('editDialog', false);
 		console.log("Save jotting: " + text);
-		if (app.jotting.secure) app.jotting.text = app.cryptify(text, app.keyCode); // encrypt if secure jotting
-		else app.jotting.text = text;
+		if (app.jotting.secure) app.jotting.text=app.cryptify(text, app.keyCode); // encrypt if secure jotting
+		else app.jotting.text=text;
 		if (app.jotting.list) {
-			app.listName = text; // *********** PROBABLY NOT NEEDED ***********
-			app.jotting.ordered = document.getElementById("order").checked;
+			app.listName=text; // *********** PROBABLY NOT NEEDED ***********
+			app.jotting.ordered=document.getElementById("order").checked;
 			console.log("ordered list: "+app.jotting.ordered);
 		}
 		// save amended jotting to indexedDB
-		var dbTransaction = app.db.transaction('jottings',"readwrite");
+		var dbTransaction=app.db.transaction('jottings',"readwrite");
 		console.log("indexedDB transaction ready");
-		var dbObjectStore = dbTransaction.objectStore('jottings');
+		var dbObjectStore=dbTransaction.objectStore('jottings');
 		console.log("indexedDB objectStore ready");
-		var request = dbObjectStore.put(app.jotting); // update jotting in database
-		request.onsuccess = function(event)  {
+		var request=dbObjectStore.put(app.jotting); // update jotting in database
+		request.onsuccess=function(event) {
 			console.log("jotting "+app.jotting.id+" updated");
 			app.populateList();
 		};
-		request.onerror = function(event) {console.log("error updating jotting "+app.jotting.id);};
+		request.onerror=function(event) {console.log("error updating jotting "+app.jotting.id);};
 	});
 
 // CANCEL EDIT
@@ -289,18 +289,18 @@ app.toggleDialog = function (d, visible) {
 	};
 
 // OPEN JOTTING/LIST
-app.openItem = function () {		
-		var item = event.target;
+app.openItem=function () {		
+		var item=event.target;
 		event.preventDefault();
-		var text = item.textContent;
-		console.log("open jotting " + text);
-		var i = 0;
-		var found = false; // deal with secure jottings
-		var t = "";
-		while (i< app.jottings.length && !found) {
-			t = app.jottings[i].text;
-			if (app.jottings[i].secure> 0) t = app.cryptify(t, app.keyCode);
-			if (t == text) found = true;
+		var text=item.textContent;
+		console.log("open jotting "+text);
+		var i=0;
+		var found=false; // deal with secure jottings
+		var t="";
+		while(i<app.jottings.length && !found) {
+			t=app.jottings[i].text;
+			if(app.jottings[i].secure> 0) t=app.cryptify(t, app.keyCode);
+			if (t==text) found=true;
 			else i++;
 		}
 		// console.log("item " + i + ": " + app.jottings[i]);
@@ -335,7 +335,7 @@ app.openItem = function () {
 
 // POPULATE JOTTINGS LIST
 app.populateList = function () {
-		var ordered = false; // NEW - allow alpha-ordered lists
+		var ordered=false; // allow alpha-ordered lists
 		//  build jottings list from children of listID
 		console.log("build jotting List for listID "+app.listID);
 		var dbTransaction=app.db.transaction('jottings',"readwrite");
@@ -352,14 +352,14 @@ app.populateList = function () {
 				console.log("list "+jotting.text+"; list: "+jotting.list+"; secure: "+jotting.secure+"; ordered: "+jotting.ordered+"; parent: "+jotting.parent+"; content: "+jotting.content);
 				var t=jotting.text;
 				ordered=jotting.ordered;
-				if(jotting.secure> 0) t=app.cryptify(t, app.keyCode);
+				if(jotting.secure>0) t=app.cryptify(t,app.keyCode);
 				app.listName=t;
 			};
 			request.onerror = function() {console.log("error retrieving jotting "+listID);}
 		}
-		else app.listName="Jottings";		
+		else app.listName="Jottings";
 		app.jottings=[];
-		ordered=true; // NEW always order top-level list
+		ordered=true; // always order top-level list
 		request=dbObjectStore.openCursor();
 		request.onsuccess=function (event) {
 			var cursor=event.target.result;
@@ -387,8 +387,8 @@ app.populateList = function () {
 				if(ordered) app.jottings.sort(function(a,b){
 					if(a.secure) return 1; // secure lists appear last
 					if(b.secure) return -1;
-    					if(a.text < b.text) return -1; // alpha sort
-    					if(a.text > b.text) return 1;
+    					if(a.text<b.text) return -1; // alpha sort
+    					if(a.text>b.text) return 1;
     					return 0; 
 				});
 				console.log("ordered is "+ordered);
@@ -400,16 +400,14 @@ app.populateList = function () {
 					var listItem = document.createElement('li');
 					listItem.classList.add('item');
 					listItem.addEventListener('click', app.openItem, false);
-					if (app.jottings[i].secure> 0) listItem.textContent = app.cryptify(app.jottings[i].text, app.keyCode);
-					else listItem.textContent = app.jottings[i].text;
-					if (app.jottings[i].list) {
+					if (app.jottings[i].secure>0) listItem.textContent=app.cryptify(app.jottings[i].text, app.keyCode);
+					else listItem.textContent=app.jottings[i].text;
+					if(app.jottings[i].list) {
 						listItem.style.fontWeight='bold';
 					}
 					// listItem.style.color=(app.jottings[i].secure)?"red":"black";
 					app.list.appendChild(listItem);
-					// report+=("; "+app.jottings[i].text);
 				}
-				// alert(report);
 			}
 		};
 	};
@@ -425,7 +423,7 @@ app.cryptify=function(value,key) {
 		k=key.charCodeAt(i%key.length);
 		v=value.charCodeAt(i);
 		// console.log("key["+i+"]: "+k+"; value["+i+"]: "+v);
-		result+=String.fromCharCode(k ^ v);
+		result+=String.fromCharCode(k^v);
 		// console.log("result: "+result);
 	}
 	return result;
@@ -508,8 +506,12 @@ app.backup=function() {
 	console.log("last save: "+app.lastSave);
 	app.keyCode=window.localStorage.keyCode; // load any saved key
 	console.log("saved key is "+app.keyCode);
-	if (app.keyCode != null) app.keyCode=app.cryptify(app.keyCode, 'jottings'); // saved key was encrypted
-	console.log("keyCode: "+app.keyCode);
+	if(app.keyCode!==null) app.keyCode=app.cryptify(app.keyCode, 'jottings'); // saved key was encrypted
+	alert("keyCode: "+app.keyCode);
+	
+	// **** FIX
+	locked=false;
+	
 	// load jottings from database
 	var request=window.indexedDB.open("jottingsDB");
 	request.onsuccess=function (event) {
