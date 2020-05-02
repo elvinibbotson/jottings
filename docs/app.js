@@ -111,9 +111,9 @@
 		app.jottings.push(jotting);
 		console.log("save new jotting " + jotting.text + "; parent: " + jotting.parent + "; secure: " + jotting.secure);
 		// save new jotting to indexedDB
-		var dbTransaction = app.db.transaction('jottings',"readwrite");
+		var dbTransaction=app.db.transaction('jottings',"readwrite");
 		console.log("indexedDB transaction ready");
-		var dbObjectStore = dbTransaction.objectStore('jottings');
+		var dbObjectStore=dbTransaction.objectStore('jottings');
 		console.log("indexedDB objectStore ready");
 		var request = dbObjectStore.add(jotting);
 		request.onsuccess = function(event) {
