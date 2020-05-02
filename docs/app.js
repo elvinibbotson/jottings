@@ -510,7 +510,7 @@ app.backup=function() {
 	alert("keyCode: "+app.keyCode);
 	
 	// **** FIX
-	locked=false;
+	app.locked=false;
 	
 	// load jottings from database
 	var request=window.indexedDB.open("jottingsDB");
