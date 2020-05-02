@@ -510,6 +510,7 @@ app.backup=function() {
 	alert("keyCode: "+app.keyCode);
 	
 	// **** FIX
+	app.keyCode='2633';
 	app.locked=false;
 	
 	// load jottings from database
